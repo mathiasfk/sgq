@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./services/api-gateway/
+    ports:
+      - 3000:3000 # host:container
+    networks:
+      - microservices
+
+  bi-module:
+    container_name: bi-module
+    build: ./services/bi-module/
+    ports:
+      - 3001:3001 # host:container
+    networks:
+      - microservices
+
+  compliance-module:
+    container_name: compliance-module
+    build: ./services/compliance-module/
+    ports:
+      - 3002:3002 # host:container
+    networks:
+      - microservices
+
+  divulgation-module:
+    container_name: divulgation-module
+    build: ./services/divulgation-module/
+    ports:
+      - 3003:3003 # host:container
+    networks:
+      - microservices
+
+  incidents-module:
+    container_name: incidents-module
+    build: ./services/incidents-module/
+    ports:
+      - 3004:3004 # host:container
+    networks:
+      - microservices
+
+  processes-module:
+    container_name: processes-module
+    build: ./services/processes-module/
+    ports:
+      - 3005:3005 # host:container
+    networks:
+      - microservices
+
+networks:
+    microservices:
