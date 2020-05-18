@@ -1,12 +1,12 @@
-// Dependencyes
+// Dependencies
 const express = require('express');
 const httpProxy = require('express-http-proxy');
 const helmet = require('helmet');
 const logger = require('morgan');
 
 const app = express();
-app.use(logger('dev'));
-app.use(helmet());
+app.use(logger('dev')); // log HTTP requests
+app.use(helmet()); // some security
 
 // Proxy configurations
 const biProxy = httpProxy('http://bi-module:3001');
@@ -15,26 +15,41 @@ const divulgationProxy = httpProxy('http://divulgation-module:3003');
 const incidentsProxy = httpProxy('http://incidents-module:3004');
 const processesProxy = httpProxy('http://processes-module:3005');
 
-// Proxy requests
-app.get('/bi', (req, res, next) => {
+
+// Business Intelligence Module
+app.all('/bi*', (req, res, next) => {
   biProxy(req, res, next);
 });
 
-app.get('/compliance', (req, res, next) => {
+// Compliance Module
+app.all('/compliance*', (req, res, next) => {
     complianceProxy(req, res, next);
 });
 
-app.get('/divulgation', (req, res, next) => {
+// Divulgation Module
+app.all('/divulgation*', (req, res, next) => {
   divulgationProxy(req, res, next);
 });
   
-app.get('/incidents', (req, res, next) => {
-    incidentsProxy(req, res, next);
+// Incidents Module
+app.all('/incident*', (req, res, next) => {
+  incidentsProxy(req, res, next);
+});
+app.all('/incident_type*', (req, res, next) => {
+  incidentsProxy(req, res, next);
+});
+app.all('/incident_conseq*', (req, res, next) => {
+  incidentsProxy(req, res, next);
+});
+app.all('/incident_conseq_type*', (req, res, next) => {
+  incidentsProxy(req, res, next);
 });
 
-app.get('/processes', (req, res, next) => {
+// Processes Module
+app.all('/processes*', (req, res, next) => {
   processesProxy(req, res, next);
 });
+
 
 app.get('/', function(req, res) {
   res.send('Olá do API Gateway!');

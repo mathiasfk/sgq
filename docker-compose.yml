@@ -5,6 +5,7 @@ services:
   api-gateway:
     container_name: api-gateway
     build: ./services/api-gateway/
+    restart: unless-stopped
     ports:
       - 3000:3000 # host:container
     networks:
@@ -13,6 +14,7 @@ services:
   bi-module:
     container_name: bi-module
     build: ./services/bi-module/
+    restart: unless-stopped
     ports:
       - 3001:3001 # host:container
     networks:
@@ -21,6 +23,7 @@ services:
   compliance-module:
     container_name: compliance-module
     build: ./services/compliance-module/
+    restart: unless-stopped
     ports:
       - 3002:3002 # host:container
     networks:
@@ -29,6 +32,7 @@ services:
   divulgation-module:
     container_name: divulgation-module
     build: ./services/divulgation-module/
+    restart: unless-stopped
     ports:
       - 3003:3003 # host:container
     networks:
@@ -37,6 +41,7 @@ services:
   incidents-module:
     container_name: incidents-module
     build: ./services/incidents-module/
+    restart: unless-stopped
     ports:
       - 3004:3004 # host:container
     networks:
@@ -45,10 +50,34 @@ services:
   processes-module:
     container_name: processes-module
     build: ./services/processes-module/
+    restart: unless-stopped
     ports:
       - 3005:3005 # host:container
     networks:
       - microservices
 
+  incidents-db:
+    container_name: incidents-db
+    image: mysql:5.7 # mysql 8 is not supported by mysql.js
+    restart: always
+    command: --init-file /data/application/init_db.sql
+    environment:
+      MYSQL_DATABASE: 'incidents_db'
+      MYSQL_USER: 'sgq'
+      MYSQL_PASSWORD: 'sgq'
+      MYSQL_ROOT_PASSWORD: 'not_123456'
+    ports:
+      - '3307:3306' # host:container
+    expose:
+      - '3306'
+    volumes:
+      - incidents-db:/var/lib/mysql
+      - ./services/incidents-module/db/init_incidents_db.sql:/data/application/init_db.sql
+    networks:
+      - microservices
+
 networks:
     microservices:
+
+volumes:
+  incidents-db:
