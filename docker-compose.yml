@@ -47,12 +47,21 @@ services:
     networks:
       - microservices
 
+  non-conformities-module:
+    container_name: non-conformities-module
+    build: ./services/non-conformities-module/
+    restart: unless-stopped
+    ports:
+      - 3005:3005 # host:container
+    networks:
+      - microservices
+
   processes-module:
     container_name: processes-module
     build: ./services/processes-module/
     restart: unless-stopped
     ports:
-      - 3005:3005 # host:container
+      - 3006:3006 # host:container
     networks:
       - microservices
 
@@ -66,13 +75,25 @@ services:
       MYSQL_USER: 'sgq'
       MYSQL_PASSWORD: 'sgq'
       MYSQL_ROOT_PASSWORD: 'not_123456'
-    ports:
-      - '3307:3306' # host:container
-    expose:
-      - '3306'
     volumes:
       - incidents-db:/var/lib/mysql
-      - ./services/incidents-module/db/init_incidents_db.sql:/data/application/init_db.sql
+      - ./services/incidents-module/db/init_db.sql:/data/application/init_db.sql
+    networks:
+      - microservices
+
+  non-conformities-db:
+    container_name: non-conformities-db
+    image: mysql:5.7 # mysql 8 is not supported by mysql.js
+    restart: always
+    command: --init-file /data/application/init_db.sql
+    environment:
+      MYSQL_DATABASE: 'non_conformities_db'
+      MYSQL_USER: 'sgq'
+      MYSQL_PASSWORD: 'sgq'
+      MYSQL_ROOT_PASSWORD: 'not_123456'
+    volumes:
+      - non-conformities-db:/var/lib/mysql
+      - ./services/non-conformities-module/db/init_db.sql:/data/application/init_db.sql
     networks:
       - microservices
 
@@ -81,3 +102,4 @@ networks:
 
 volumes:
   incidents-db:
+  non-conformities-db:

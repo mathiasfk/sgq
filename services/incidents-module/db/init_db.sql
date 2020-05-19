@@ -17,7 +17,10 @@ CREATE TABLE IF NOT EXISTS incident (
     incident_type INT,
     incident_time TIMESTAMP,
     comments VARCHAR(255),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (incident_type)
+        REFERENCES incident_type(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS incident_conseq_type (
@@ -30,5 +33,8 @@ CREATE TABLE IF NOT EXISTS incident_conseq (
     id INT NOT NULL AUTO_INCREMENT, 
     incident_id INT,
     consequence_type INT,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (consequence_type)
+        REFERENCES incident_conseq_type(id)
+        ON DELETE CASCADE
 );

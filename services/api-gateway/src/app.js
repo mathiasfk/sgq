@@ -13,7 +13,8 @@ const biProxy = httpProxy('http://bi-module:3001');
 const complianceProxy = httpProxy('http://compliance-module:3002');
 const divulgationProxy = httpProxy('http://divulgation-module:3003');
 const incidentsProxy = httpProxy('http://incidents-module:3004');
-const processesProxy = httpProxy('http://processes-module:3005');
+const nonConformitiesProxy = httpProxy('http://non-conformities-module:3005');
+const processesProxy = httpProxy('http://processes-module:3006');
 
 
 // Business Intelligence Module
@@ -43,6 +44,14 @@ app.all('/incident_conseq*', (req, res, next) => {
 });
 app.all('/incident_conseq_type*', (req, res, next) => {
   incidentsProxy(req, res, next);
+});
+
+// Non-Conformities Module
+app.all('/non_conformity*', (req, res, next) => {
+  nonConformitiesProxy(req, res, next);
+});
+app.all('/non_conformity_type*', (req, res, next) => {
+  nonConformitiesProxy(req, res, next);
 });
 
 // Processes Module
