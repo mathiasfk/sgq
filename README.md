@@ -30,3 +30,11 @@ Por enquanto eles estão disponíveis diretamente ou através do API Gateway, po
 * http://localhost:3002
 
 * http://localhost:3000/compliance
+
+## Testando a pagina web
+1. Abra o terminal
+2. Vai na pasta do projeto ./web/sgq-app
+```
+npm install
+npm start
+```
