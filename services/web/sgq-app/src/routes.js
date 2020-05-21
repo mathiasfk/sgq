@@ -58,7 +58,7 @@ const dashboardRoutes = [
   },
   {
     path: "/typography",
-    name: "Divulgation",    
+    name: "Incidentes",    
     icon: LibraryBooks,
     component: Typography,
     layout: "/admin"
