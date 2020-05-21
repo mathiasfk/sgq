@@ -13,6 +13,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
+
 import avatar from "assets/img/faces/marc.jpg";
 
 const styles = {
@@ -159,7 +160,7 @@ export default function UserProfile() {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
+              <h6 className={classes.cardCategory}>O PICA das Gálaxias</h6>
               <h4 className={classes.cardTitle}>André Martins</h4>
               <p className={classes.description}>
               Os detalhes são pretos, mas a minha vida continua colorida pois é na ignorância que eu vivo. 
