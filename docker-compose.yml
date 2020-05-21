@@ -97,9 +97,26 @@ services:
     networks:
       - microservices
 
+  processes-db:
+    container_name: processes-db
+    image: mysql:5.7 # mysql 8 is not supported by mysql.js
+    restart: always
+    command: --init-file /data/application/init_db.sql
+    environment:
+      MYSQL_DATABASE: 'non_conformities_db'
+      MYSQL_USER: 'sgq'
+      MYSQL_PASSWORD: 'sgq'
+      MYSQL_ROOT_PASSWORD: 'not_123456'
+    volumes:
+      - processes-db:/var/lib/mysql
+      - ./services/processes-module/db/init_db.sql:/data/application/init_db.sql
+    networks:
+      - microservices
+
 networks:
     microservices:
 
 volumes:
   incidents-db:
   non-conformities-db:
+  processes-db:

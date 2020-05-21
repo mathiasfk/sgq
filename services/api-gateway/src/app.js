@@ -32,17 +32,8 @@ app.all('/divulgation*', (req, res, next) => {
   divulgationProxy(req, res, next);
 });
   
-// Incidents Module
+// Incidents and Problems Module
 app.all('/incident*', (req, res, next) => {
-  incidentsProxy(req, res, next);
-});
-app.all('/incident_type*', (req, res, next) => {
-  incidentsProxy(req, res, next);
-});
-app.all('/incident_conseq*', (req, res, next) => {
-  incidentsProxy(req, res, next);
-});
-app.all('/incident_conseq_type*', (req, res, next) => {
   incidentsProxy(req, res, next);
 });
 
@@ -50,12 +41,9 @@ app.all('/incident_conseq_type*', (req, res, next) => {
 app.all('/non_conformity*', (req, res, next) => {
   nonConformitiesProxy(req, res, next);
 });
-app.all('/non_conformity_type*', (req, res, next) => {
-  nonConformitiesProxy(req, res, next);
-});
 
-// Processes Module
-app.all('/processes*', (req, res, next) => {
+// Automotive Processes Module
+app.all('/checklist*', (req, res, next) => {
   processesProxy(req, res, next);
 });
 
