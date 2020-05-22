@@ -2,6 +2,21 @@ version: "3.8"
 
 services:
 
+  web-service:
+    container_name: web-service
+    build: ./services/web/sgq-app/
+    volumes:
+      - ./services/web/sgq-app/:/usr/src/app
+      - web-node-modules:/usr/src/app/node_modules
+    ports:
+      - '9000:3000' # expose ports - HOST:CONTAINER
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - api-gateway
+    networks:
+      - microservices
+
   api-gateway:
     container_name: api-gateway
     build: ./services/api-gateway/
@@ -120,3 +135,4 @@ volumes:
   incidents-db:
   non-conformities-db:
   processes-db:
+  web-node-modules:

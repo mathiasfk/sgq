@@ -18,6 +18,11 @@ docker-compose build
 docker-compose up
 ```
 
+Isso irá subir todos os serviços, inclusive o web.
+
+- Web: http://localhost:9000
+- API: http://localhost:3000
+
 ## Testando os microsserviços
 
 Para testar os microserviços, faça requests GET para cada um deles.
@@ -31,9 +36,19 @@ Por enquanto eles estão disponíveis diretamente ou através do API Gateway, po
 
 * http://localhost:3000/compliance
 
+É possível testar cada serviço isolamente sem o docker-compose:
+
+```
+cd services/incidents-module/
+node src/app.js
+```
+
 ## Testando a pagina web
+
+Para testar a aplicação react sem subir o docker-compose:
+
 1. Abra o terminal
-2. Vai na pasta do projeto ./web/sgq-app
+2. Vá na pasta do projeto ./web/sgq-app
 ```
 npm install
 npm start
