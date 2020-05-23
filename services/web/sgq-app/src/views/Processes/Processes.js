@@ -49,7 +49,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+export default function ProcessesPage() {
   const classes = useStyles();
   return (
     <GridContainer>

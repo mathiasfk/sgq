@@ -17,59 +17,66 @@
 */
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
-import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
-import BubbleChart from "@material-ui/icons/BubbleChart";
-import LocationOn from "@material-ui/icons/LocationOn";
-import Notifications from "@material-ui/icons/Notifications";
-import Unarchive from "@material-ui/icons/Unarchive";
-import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import UserProfile from "views/UserProfile/UserProfile.js";
-import TableList from "views/TableList/TableList.js";
-import Typography from "views/Typography/Typography.js";
-
-import NotificationsPage from "views/Notifications/Notifications.js";
-// core components/views for RTL layout
+import ProcessesPage from "views/Processes/Processes.js";
+import IncidentsPage from "views/Incidents/Incidents";
+import NonConformitiesPage from "views/NonConformities/NonConformities";
+import DivulgationPage from "views/Divulgation/Divulgation";
+import BusinessIntelligencePage from "views/BusinessIntelligence/BusinessIntelligence";
+import CompliancePage from "views/Compliance/Compliance";
 
 const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
   },
   {
-    path: "/user",
-    name: "User Profile",
-    icon: Person,
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
     path: "/table",
-    name: "Checklist",    
+    name: "Processos Automotivos",    
     icon: "content_paste",
-    component: TableList,
+    component: ProcessesPage,
     layout: "/admin"
   },
   {
-    path: "/typography",
-    name: "Incidentes",    
+    path: "/incidents",
+    name: "Incidentes e Problemas",    
     icon: LibraryBooks,
-    component: Typography,
+    component: IncidentsPage,
     layout: "/admin"
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
+    path: "/non-conformities",
+    name: "Não Conformidades",    
+    icon: LibraryBooks,
+    component: NonConformitiesPage,
     layout: "/admin"
-  }
+  },
+  {
+    path: "/divulgation",
+    name: "Divulgação e Transparência",    
+    icon: LibraryBooks,
+    component: DivulgationPage,
+    layout: "/admin"
+  },
+  {
+    path: "/bi",
+    name: "Business Intelligence",    
+    icon: LibraryBooks,
+    component: BusinessIntelligencePage,
+    layout: "/admin"
+  },
+  {
+    path: "/compliance",
+    name: "Compliance",    
+    icon: LibraryBooks,
+    component: CompliancePage,
+    layout: "/admin"
+  },
 ];
 
 export default dashboardRoutes;
