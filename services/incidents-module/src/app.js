@@ -65,7 +65,7 @@ app.get('/incident_conseq_type/:id', function(req, res) {
 });
 // POST 
 app.post('/incident_conseq_type', function(req, res) {
-  db.execSQLQuery('INSERT INTO incident_conseq_type (id, consequence_name) VALUES (NULL, ' + req.query.type + ',NOW(),"' + req.query.name + '");', res);
+  db.execSQLQuery('INSERT INTO incident_conseq_type (id, consequence_name) VALUES (NULL,"' + req.query.name + '");', res);
 });
 // PUT
 app.put('/incident_conseq_type/:id', function(req, res) {

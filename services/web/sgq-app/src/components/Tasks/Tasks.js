@@ -32,20 +32,19 @@ export default function Tasks(props) {
     }
     setChecked(newChecked);
   };
-  const { tasksIndexes, tasks, rtlActive, edit = false, remove = false} = props;
+  const {tasks, edit = false, remove = false} = props;
   const tableCellClasses = classnames(classes.tableCell, {
-    [classes.tableCellRTL]: rtlActive
   });
   return (
     <Table className={classes.table}>
       <TableBody>
-        {tasksIndexes.map(value => (
-          <TableRow key={value} className={classes.tableRow}>
+        {tasks.map(item => (
+          <TableRow key={item.id} className={classes.tableRow}>
             <TableCell className={tableCellClasses}>
               <Checkbox
-                checked={checked.indexOf(value) !== -1}
+                checked={checked.indexOf(item.id) !== -1}
                 tabIndex={-1}
-                onClick={() => handleToggle(value)}
+                onClick={() => handleToggle(item.id)}
                 checkedIcon={<Check className={classes.checkedIcon} />}
                 icon={<Check className={classes.uncheckedIcon} />}
                 classes={{
@@ -54,7 +53,7 @@ export default function Tasks(props) {
                 }}
               />
             </TableCell>
-            <TableCell className={tableCellClasses}>{tasks[value]}</TableCell>
+            <TableCell className={tableCellClasses}>{item.name}</TableCell>
             <TableCell className={classes.tableActions}>
               {edit ? (
               <Tooltip
@@ -103,9 +102,7 @@ export default function Tasks(props) {
 }
 
 Tasks.propTypes = {
-  tasksIndexes: PropTypes.arrayOf(PropTypes.number),
-  tasks: PropTypes.arrayOf(PropTypes.node),
-  rtlActive: PropTypes.bool,
+  tasks: PropTypes.arrayOf(PropTypes.object),
   checkedIndexes: PropTypes.array,
   edit: PropTypes.bool,
   remove: PropTypes.bool

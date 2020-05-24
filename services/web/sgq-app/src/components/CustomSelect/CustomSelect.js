@@ -54,7 +54,7 @@ export default function CustomSelect(props) {
           id={id}
         >
         {options.map(item => (
-        <MenuItem value={item.id}>{item.incident_type}</MenuItem>
+        <MenuItem value={item.id}>{item.name}</MenuItem>
         ))}
         </Select>
       </FormControl>

@@ -1,6 +1,7 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -10,16 +11,12 @@ import CardBody from "components/Card/CardBody.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import CustomSelect from "components/CustomSelect/CustomSelect.js";
+import CustomTable from "components/CustomTable/CustomTable.js";
 import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
-
-var operationalConsequences = [
-  "Produção parada",
-  "Mudança nos turnos",
-  "Perda de insumos"
-];
-
+// variables
+import { incidentTypes, incidents, operationalConsequenceTypes, operationalConsequences } from "variables/incidents.js";
 
 const styles = {
   typo: {
@@ -84,11 +81,7 @@ export default function IncidentsPage() {
                             formControlProps={{
                               fullWidth: true
                             }}
-                            options={[
-                              {id:0, incident_type:"Parada agendada"},
-                              {id:1, incident_type:"Falha de maquinário"},
-                              {id:2, incident_type:"Erro humano"}
-                            ]}
+                            options={incidentTypes}
                           />
                         </GridItem>
                         <GridItem xs={12} sm={12} md={12}>
@@ -107,10 +100,10 @@ export default function IncidentsPage() {
                       </GridContainer>
                     </GridItem>
                       <GridItem xs={12} sm={12} md={4}>
+                      <InputLabel style={{ color: "#AAAAAA" }}>Consequências Operacionais</InputLabel>
                       <Tasks
-                        checkedIndexes={[]}
-                        tasksIndexes={[0, 1, 2]}
-                        tasks={operationalConsequences}
+                        tasks={operationalConsequenceTypes}
+                        checkedIndexes = {[]}
                       />
                       </GridItem>
                     </GridContainer>
@@ -127,16 +120,13 @@ export default function IncidentsPage() {
               tabContent: (
                 <Card>
                   <CardBody>
-                    <Table
-                      tableHeaderColor="primary"
-                      tableHead={["Tipo", "Data", "Comentários", "Consequências Operacionais"]}
-                      tableData={[
-                        ["Parada agendada", "2020-04-28 17:00", "Tudo certo.", ""],
-                        ["Falha em equipamento", "2020-05-02 13:42", "Falha hidráulica na prensa", "Perda de insumos"],
-                        ["Falha em equipamento", "2020-05-03 12:23", "Falha hidráulica na prensa de novo", "Perda de insumos"],
-                        ["Parada agendada", "2020-05-04 10:05", "Manutenção da prensa hidráulica", ""],
-                      ]}
-                    />
+                    <CustomTable columns={{
+                      "id": "ID",
+                      "incident_type": "Tipo",
+                      "incident_time": "Data", 
+                      "comments": "Comentários",
+                      }}
+                      content={incidents}></CustomTable>
                   </CardBody>
                 </Card>
               )
