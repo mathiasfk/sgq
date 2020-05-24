@@ -32,7 +32,7 @@ export default function Tasks(props) {
     }
     setChecked(newChecked);
   };
-  const { tasksIndexes, tasks, rtlActive } = props;
+  const { tasksIndexes, tasks, rtlActive, edit = false, remove = false} = props;
   const tableCellClasses = classnames(classes.tableCell, {
     [classes.tableCellRTL]: rtlActive
   });
@@ -56,6 +56,7 @@ export default function Tasks(props) {
             </TableCell>
             <TableCell className={tableCellClasses}>{tasks[value]}</TableCell>
             <TableCell className={classes.tableActions}>
+              {edit ? (
               <Tooltip
                 id="tooltip-top"
                 title="Edit Task"
@@ -73,6 +74,8 @@ export default function Tasks(props) {
                   />
                 </IconButton>
               </Tooltip>
+              ) : null}
+              {remove ? (
               <Tooltip
                 id="tooltip-top-start"
                 title="Remove"
@@ -90,6 +93,7 @@ export default function Tasks(props) {
                   />
                 </IconButton>
               </Tooltip>
+              ) : null}
             </TableCell>
           </TableRow>
         ))}
@@ -102,5 +106,7 @@ Tasks.propTypes = {
   tasksIndexes: PropTypes.arrayOf(PropTypes.number),
   tasks: PropTypes.arrayOf(PropTypes.node),
   rtlActive: PropTypes.bool,
-  checkedIndexes: PropTypes.array
+  checkedIndexes: PropTypes.array,
+  edit: PropTypes.bool,
+  remove: PropTypes.bool
 };

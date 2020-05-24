@@ -6,18 +6,19 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Tasks from "components/Tasks/Tasks.js";
-import Cloud from "@material-ui/icons/Cloud";
 import CustomInput from "components/CustomInput/CustomInput.js";
-import InputLabel from "@material-ui/core/InputLabel";
+import CustomSelect from "components/CustomSelect/CustomSelect.js";
 import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
-import { bugs, website, server } from "variables/general.js";
+import Tasks from "components/Tasks/Tasks.js";
+
+var operationalConsequences = [
+  "Produção parada",
+  "Mudança nos turnos",
+  "Perda de insumos"
+];
 
 
 const styles = {
@@ -54,7 +55,7 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
-  }
+  },
 };
 
 const useStyles = makeStyles(styles);
@@ -62,103 +63,93 @@ const useStyles = makeStyles(styles);
 export default function IncidentsPage() {
   const classes = useStyles();
   return (
-   <GridItem xs={12} sm={12} md={8}>
-    <Card>
-      <CardHeader color="primary">
-        <h4 className={classes.cardTitleWhite}>Que caralho que aconteceu?</h4>
-        <p className={classes.cardCategoryWhite}>DESCREVA ESSA PORRA COM LETRAS MAIUSCULAS</p>
-      </CardHeader>
-      <CardBody>
-        <GridContainer>         
-          <GridItem xs={12} sm={12} md={3}>
-            <CustomInput
-              labelText="A culpa é de quem?"
-              id="username"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <CustomInput
-              labelText="Descreva o meliante que estragou tudo"
-              id="email-address"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={6}>
-            <CustomInput
-              labelText="Nome do X9"
-              id="first-name"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
-            <CustomInput
-              labelText="Sobrenome do X9"
-              id="last-name"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <CustomInput
-              labelText="Setor"
-              id="city"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <CustomInput
-              labelText="Gerente"
-              id="country"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <CustomInput
-              labelText="Onde almoça?"
-              id="postal-code"
-              formControlProps={{
-                fullWidth: true
-              }}
-            />
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={12}>
-            <InputLabel style={{ color: "#AAAAAA" }}>RELATO DE UM DEDO DURO</InputLabel>
-            <CustomInput
-              labelText="Descreva exatamente o que aconteceu!!!"
-              id="Descreva exatamente o que aconteceu!!!"
-              formControlProps={{
-                fullWidth: true
-              }}
-              inputProps={{
-                multiline: true,
-                rows: 5
-              }}
-            />
-          </GridItem>
-        </GridContainer>
-      </CardBody>
-      <CardFooter>
-        <Button color="primary">Enviar para o RH</Button>
-      </CardFooter>
-    </Card>
+    <GridContainer>
+    <GridItem xs={12} sm={12} md={12}>
+      <CustomTabs
+          headerColor="primary"
+          tabs={[
+            {
+              tabName: "Reportar incidente",
+              tabIcon: "",
+              tabContent: (
+                <Card>
+                  <CardBody>
+                    <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                      <GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+                          <CustomSelect 
+                            labelText="Tipo de incidente"
+                            id="incident-type"
+                            formControlProps={{
+                              fullWidth: true
+                            }}
+                            options={[
+                              {id:0, incident_type:"Parada agendada"},
+                              {id:1, incident_type:"Falha de maquinário"},
+                              {id:2, incident_type:"Erro humano"}
+                            ]}
+                          />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                          labelText="Descreva detalhes adicionais do incidente se necessário."
+                          id="indicent-comments"
+                          formControlProps={{
+                            fullWidth: true
+                          }}
+                          inputProps={{
+                            multiline: true,
+                            rows: 5
+                          }}
+                        />
+                      </GridItem>
+                      </GridContainer>
+                    </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                      <Tasks
+                        checkedIndexes={[]}
+                        tasksIndexes={[0, 1, 2]}
+                        tasks={operationalConsequences}
+                      />
+                      </GridItem>
+                    </GridContainer>
+                  </CardBody>
+                  <CardFooter>
+                    <Button color="primary">Enviar</Button>
+                  </CardFooter>
+                </Card>
+              )
+            },
+            {
+              tabName: "Histórico",
+              tabIcon: "",
+              tabContent: (
+                <Card>
+                  <CardBody>
+                    <Table
+                      tableHeaderColor="primary"
+                      tableHead={["Tipo", "Data", "Comentários", "Consequências Operacionais"]}
+                      tableData={[
+                        ["Parada agendada", "2020-04-28 17:00", "Tudo certo.", ""],
+                        ["Falha em equipamento", "2020-05-02 13:42", "Falha hidráulica na prensa", "Perda de insumos"],
+                        ["Falha em equipamento", "2020-05-03 12:23", "Falha hidráulica na prensa de novo", "Perda de insumos"],
+                        ["Parada agendada", "2020-05-04 10:05", "Manutenção da prensa hidráulica", ""],
+                      ]}
+                    />
+                  </CardBody>
+                </Card>
+              )
+            }
+          ]}
+        />
+    </GridItem>
+    <GridItem xs={12} sm={12} md={12}>
+    
   </GridItem>
+   <GridItem xs={12} sm={12} md={8}>
+    
+  </GridItem>
+  </GridContainer>
   );
 }
