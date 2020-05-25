@@ -38,3 +38,5 @@ CREATE TABLE IF NOT EXISTS incident_conseq (
         REFERENCES incident_conseq_type(id)
         ON DELETE CASCADE
 );
+
+REPLACE INTO incident_type (id, incident_name) values (1,"Parada agendada"), (2,"Falha de maquinario"), (3,"Erro humano");

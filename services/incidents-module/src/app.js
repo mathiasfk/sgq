@@ -3,8 +3,14 @@ var app = express();
 
 const db = require('./db');
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/', function(req, res) {
-  res.send('Olá do módulo de incedentes e problemas!');
+  res.send('Olá do módulo de incedentes e problemas!!!!!!');
 });
 
 // API REST
@@ -12,11 +18,11 @@ app.get('/', function(req, res) {
 // incident_type
 // GET
 app.get('/incident_type', function(req, res) {
-  db.execSQLQuery('SELECT * FROM incident_type;', res);
+  db.execSQLQuery('SELECT id, incident_name as `name` FROM incident_type;', res);
 });
 // GET
 app.get('/incident_type/:id', function(req, res) {
-  db.execSQLQuery('SELECT * FROM incident_type WHERE id =' + req.params.id, res);
+  db.execSQLQuery('SELECT id, incident_name as `name` FROM incident_type WHERE id =' + req.params.id, res);
 });
 // POST
 app.post('/incident_type', function(req, res) {

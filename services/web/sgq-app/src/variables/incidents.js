@@ -1,19 +1,4 @@
-/* Mock variables to test front without back-end */
-var incidentTypes = [
-    {
-        "id": 1,
-        "name": "Parada agendada"
-    },
-    {
-        "id": 2,
-        "name": "Falha de maquinário"
-    },
-    {
-        "id": 3,
-        "name": "Erro humano"
-    }
-];
-  
+/* Mock variables to test front without back-end */ 
 var incidents = [
     {
         "id": 1,

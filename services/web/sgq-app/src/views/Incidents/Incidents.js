@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -16,7 +16,7 @@ import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
 // variables
-import { incidentTypes, incidents, operationalConsequenceTypes, operationalConsequences } from "variables/incidents.js";
+import { incidents, operationalConsequenceTypes, operationalConsequences } from "variables/incidents.js";
 
 const styles = {
   typo: {
@@ -59,6 +59,18 @@ const useStyles = makeStyles(styles);
 
 export default function IncidentsPage() {
   const classes = useStyles();
+  const [tiposIncidentes, setTiposIncidentes] = useState([]);
+
+  async function fetchData(){
+    const resposta = await fetch("http://127.0.0.1:3004/incident_type");
+    resposta.json()
+    .then(response => setTiposIncidentes(response));
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <GridContainer>
     <GridItem xs={12} sm={12} md={12}>
@@ -81,7 +93,7 @@ export default function IncidentsPage() {
                             formControlProps={{
                               fullWidth: true
                             }}
-                            options={incidentTypes}
+                            options={tiposIncidentes}
                           />
                         </GridItem>
                         <GridItem xs={12} sm={12} md={12}>
