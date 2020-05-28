@@ -20,21 +20,6 @@ var incidents = [
     }
 ];
 
-var operationalConsequenceTypes = [
-    {
-        "id": 1,
-        "name": "Produção parada"
-    },
-    {
-        "id": 2,
-        "name": "Mudança nos turnos"
-    },
-    {
-        "id": 3,
-        "name": "Perda de insumos"
-    }
-];
-
 var operationalConsequences = [
     {
         "id": 1,
@@ -44,8 +29,6 @@ var operationalConsequences = [
 ];
 
 module.exports = {
-    incidentTypes,
     incidents,
-    operationalConsequenceTypes,
-    operationalConsequences
+    operationalConsequences,
 };

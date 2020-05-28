@@ -18,11 +18,11 @@ app.get('/', function(req, res) {
 // incident_type
 // GET
 app.get('/incident_type', function(req, res) {
-  db.execSQLQuery('SELECT id, incident_name as `name` FROM incident_type;', res);
+  db.execSQLQuery('SELECT id, `name` FROM incident_type;', res);
 });
 // GET
 app.get('/incident_type/:id', function(req, res) {
-  db.execSQLQuery('SELECT id, incident_name as `name` FROM incident_type WHERE id =' + req.params.id, res);
+  db.execSQLQuery('SELECT id, `name` FROM incident_type WHERE id =' + req.params.id, res);
 });
 // POST
 app.post('/incident_type', function(req, res) {
@@ -41,7 +41,7 @@ app.delete('/incident_type/:id', function(req, res) {
 // incident
 // GET
 app.get('/incident', function(req, res) {
-  db.execSQLQuery('SELECT * FROM incident;', res);
+  db.execSQLQuery('SELECT id, incident_type, incident_time, comments FROM incident;', res);
 });
 // GET 
 app.get('/incident/:id', function(req, res) {
@@ -49,7 +49,7 @@ app.get('/incident/:id', function(req, res) {
 });
 // POST 
 app.post('/incident', function(req, res) {
-  db.execSQLQuery('INSERT INTO incident (id, incident_type, incident_time, comments) VALUES (NULL, ' + req.query.type + ',NOW(),"' + req.query.comments + '");', res);
+  db.execSQLQuery('INSERT INTO incident (id, incident_type, incident_time, comments) VALUES (NULL, ' + req.body.type + ',NOW(),"' + req.body.comments + '");', res);
 });
 // PUT
 app.put('/incident/:id', function(req, res) {
@@ -103,7 +103,6 @@ app.put('/incident_conseq/:id', function(req, res) {
 app.delete('/incident_conseq/:id', function(req, res) {
   db.execSQLQuery('DELETE FROM incident_conseq WHERE id =' + req.params.id, res);
 });
-
 
 // Start server
 app.listen(3004, function() {
