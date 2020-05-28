@@ -20,12 +20,14 @@ export default function CustomSelect(props) {
       id,
       labelProps,
       options,
+      onChange
     } = props;
 
     const [state, setState] = React.useState('');
 
     const handleChange = (event) => {
         setState(event.target.value);
+        onChange(event.target.value);
     };
   
     const marginTop = classNames({
