@@ -6,7 +6,7 @@ CREATE USER IF NOT EXISTS 'sgq'@'%' IDENTIFIED WITH mysql_native_password BY 'su
 GRANT USAGE, SELECT, INSERT, UPDATE, DELETE ON *.* TO 'sgq'@'%';
 FLUSH PRIVILEGES;
 
-drop table incident_type;
+drop table if exists incident_type;
 CREATE TABLE IF NOT EXISTS incident_type (
     id INT NOT NULL AUTO_INCREMENT, 
     name VARCHAR(255),
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS incident (
         ON DELETE CASCADE
 );
 
-drop table incident_conseq_type;
+drop table if exists incident_conseq_type;
 CREATE TABLE IF NOT EXISTS incident_conseq_type (
     id INT NOT NULL AUTO_INCREMENT, 
     `name` VARCHAR(255),
