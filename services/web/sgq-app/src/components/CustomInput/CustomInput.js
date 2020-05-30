@@ -23,8 +23,13 @@ export default function CustomInput(props) {
     labelProps,
     inputProps,
     error,
-    success
+    success,
+    onChange
   } = props;
+
+  const handleChange = (event) => {
+    onChange(event.target.value);
+  }
 
   const labelClasses = classNames({
     [" " + classes.labelRootError]: error,
@@ -48,6 +53,7 @@ export default function CustomInput(props) {
           className={classes.labelRoot + labelClasses}
           htmlFor={id}
           {...labelProps}
+          onChange={handleChange}
         >
           {labelText}
         </InputLabel>
@@ -60,6 +66,7 @@ export default function CustomInput(props) {
         }}
         id={id}
         {...inputProps}
+        onChange={handleChange}
       />
       {error ? (
         <Clear className={classes.feedback + " " + classes.labelRootError} />

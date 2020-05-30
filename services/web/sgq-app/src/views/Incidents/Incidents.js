@@ -14,8 +14,6 @@ import CustomTable from "components/CustomTable/CustomTable.js";
 import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
-// variables
-import { incidents } from "variables/incidents.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
 const styles = {
   typo: {
@@ -63,6 +61,7 @@ export default function IncidentsPage() {
 
   const [selectedTipoIncidente, setSelectedTipoIncidente] = useState();
   const checkedIndexes = [];
+  const [comments, setComments] = useState();
   const [selectedOperationalConsequences, setSelectedOperationalConsequences] = useState([]);
 
   async function fetchData(){
@@ -87,6 +86,10 @@ export default function IncidentsPage() {
     });
   }
 
+  const onChangeComments = (value) => {
+    setComments(value);
+  }
+
   const onChangeIncidentType = (value) => {
     setSelectedTipoIncidente(value);
   }
@@ -98,19 +101,19 @@ export default function IncidentsPage() {
   function saveIncident (){
     const requestOptions = {
       method: 'POST',
+      mode: "cors",
       headers: { 
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(
         { 
           type: selectedTipoIncidente,
-          comments: "Testando!",
-          //consequence_type: selectedOperationalConsequences,
+          comments: comments,
+          consequence_type: selectedOperationalConsequences,
         })
     }; 
 
-    alert("teste!");
-    alert(selectedOperationalConsequences);
     fetch("http://127.0.0.1:3004/incident", requestOptions)
     .then((response => {
       alert("Enviou!");
@@ -158,6 +161,7 @@ export default function IncidentsPage() {
                             multiline: true,
                             rows: 5
                           }}
+                          onChange={onChangeComments}
                         />
                       </GridItem>
                       </GridContainer>

@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 
+
 const db = require('./db');
 
 app.use(function(req, res, next) {
@@ -8,6 +9,8 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.use(express.json());
 
 app.get('/', function(req, res) {
   res.send('Olá do módulo de incedentes e problemas!!!!!!');
@@ -49,7 +52,20 @@ app.get('/incident/:id', function(req, res) {
 });
 // POST 
 app.post('/incident', function(req, res) {
-  db.execSQLQuery('INSERT INTO incident (id, incident_type, incident_time, comments) VALUES (NULL, ' + req.body.type + ',NOW(),"' + req.body.comments + '");', res);
+  let insertIncident = 'INSERT INTO incident (id, incident_type, incident_time, comments) VALUES (NULL, ' + req.body.type + ',NOW(),"' + req.body.comments + '");'
+  let insertsItems = ``
+  req.body.consequence_type.forEach(item => {
+    console.log(item);
+    insertsItems += 
+    `INSERT INTO incident_conseq (id, incident_id, consequence_type) VALUES (NULL,@incident_id,${item});
+    `;
+  });
+
+  db.execMultipleStatements(`
+  ${insertIncident}
+  SET @incident_id = LAST_INSERT_ID();
+  ${insertsItems}
+  `, res);  
 });
 // PUT
 app.put('/incident/:id', function(req, res) {
