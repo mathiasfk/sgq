@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
-//import { userActions } from '../_actions';
+import { userActions } from '../../_actions';
 
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
 
         // reset login status
-        // this.props.logout();
+        this.props.logout();
 
         this.state = {
             username: '',
@@ -75,11 +75,10 @@ function mapState(state) {
     return { loggingIn };
 }
 
-// const actionCreators = {
-//     login: userActions.login,
-//     logout: userActions.logout
-// }
+const actionCreators = {
+    login: userActions.login,
+    logout: userActions.logout
+}
 
-//const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
-//export { connectedLoginPage as LoginPage };
-export { LoginPage };
+const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
+export { connectedLoginPage as LoginPage };

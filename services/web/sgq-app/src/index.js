@@ -19,22 +19,31 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from 'react-redux';
 
 // core components
 import Admin from "layouts/Admin.js";
-import Login from "layouts/Login.js";
+import { LoginLayout } from "layouts/LoginLayout.js";
 import "assets/css/material-dashboard-react.css?v=1.8.0";
+import { history } from './_helpers';
+import { store } from './_helpers';
+import { PrivateRoute } from './_components';
 
-const hist = createBrowserHistory();
+// setup fake backend
+import { configureFakeBackend } from './_helpers';
+configureFakeBackend();
+
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Login} />
-      <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Switch>
-  </Router>,
+  <Provider store={store}>
+    <Router history={history}>
+      <Switch>
+        <Route path="/login" component={LoginLayout} />
+        <Route path="/register" component={LoginLayout} />
+        <PrivateRoute path="/admin" component={Admin} />
+        <Redirect from="*" to="/admin" />
+      </Switch>
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
