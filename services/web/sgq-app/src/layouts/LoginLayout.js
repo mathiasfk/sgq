@@ -1,12 +1,21 @@
 import React from 'react';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+// @material-ui/core components
+import { withStyles } from '@material-ui/core/styles';
+import { Alert } from '@material-ui/lab';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import { history } from '../_helpers';
 import { alertActions } from '../_actions';
-import { PrivateRoute } from '../_components';
 import { LoginPage } from 'views/Login/Login';
 import { RegisterPage } from 'views/Register/Register';
+
+// style
+import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import { CssBaseline } from '@material-ui/core';
 
 class LoginLayout extends React.Component {
     constructor(props) {
@@ -19,19 +28,27 @@ class LoginLayout extends React.Component {
     }
 
     render() {
-        const { alert } = this.props;
+        const { alert, classes } = this.props;
         return (
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
-                        {alert.message &&
-                            <div className={`alert ${alert.type}`}>{alert.message}</div>
-                        }
-                        <Switch>
-                            <Route path="/login" component={LoginPage} />
-                            <Route path="/register" component={RegisterPage} />
-                        </Switch>
-                    </div>
+            <div className={classes.container}>
+                <div className={classes.content}>
+                    <CssBaseline/>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Switch>
+                                <Route path="/login" component={LoginPage} />
+                                <Route path="/register" component={RegisterPage} />
+                            </Switch>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Container component="main" maxWidth="xs">
+                            {
+                            alert.message && 
+                                <Alert severity={`${alert.type}`}>{alert.message}</Alert>
+                            }
+                            </Container>
+                        </Grid>
+                    </Grid>
                 </div>
             </div>
         );
@@ -47,5 +64,5 @@ const actionCreators = {
     clearAlerts: alertActions.clear
 };
 
-const connectedApp = connect(mapState, actionCreators)(LoginLayout);
+const connectedApp = connect(mapState, actionCreators)(withStyles(styles)(LoginLayout));
 export { connectedApp as LoginLayout };
