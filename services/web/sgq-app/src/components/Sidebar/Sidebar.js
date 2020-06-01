@@ -14,6 +14,7 @@ import Icon from "@material-ui/core/Icon";
 // core components
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 import RTLNavbarLinks from "components/Navbars/RTLNavbarLinks.js";
+import CustomIcon from "components/CustomIcon/CustomIcon";
 
 import styles from "assets/jss/material-dashboard-react/components/sidebarStyle.js";
 
@@ -80,22 +81,9 @@ export default function Sidebar(props) {
       })}
     </List>
   );
-  var brand = (
-    <div className={classes.logo}>
-      <a
-        href=""
-        className={classNames(classes.logoLink, {
-          [classes.logoLinkRTL]: props.rtlActive
-        })}
-        target="_blank"
-      >
-        <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
-        </div>
-        {logoText}
-      </a>
-    </div>
-  );
+  
+  var brand = (<CustomIcon logo={logo} logoText={logoText}/>);
+
   return (
     <div>
       <Hidden mdUp implementation="css">

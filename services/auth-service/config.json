@@ -1,0 +1,4 @@
+﻿{
+    "connectionString": "mongodb://users-db:27017",
+    "secret": "secret SGQ string to generate JWT tokens"
+}
