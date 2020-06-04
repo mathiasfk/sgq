@@ -18,24 +18,6 @@ import logo from "assets/img/quality-white.png";
 
 let ps;
 
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      }
-      return null;
-    })}
-    <Redirect from="/admin" to="/admin/dashboard" />
-  </Switch>
-);
-
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
@@ -48,6 +30,42 @@ export default function Admin({ ...rest }) {
   const [color, setColor] = React.useState("blue");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  let user = "";
+  let group = "";
+  if(localStorage.getItem('user')){
+    user = JSON.parse(localStorage.getItem('user')).username;
+    group = user == "lucas.gustavo" ? "operario" : "admin";
+  }
+
+  function filterRouters(){
+    return routes.filter(t => t.group === group || t.group === "all");
+  }
+
+  const showRoutes = filterRouters();
+
+  const switchRoutes = (
+    <Switch>
+      {showRoutes.map((prop, key) => {
+        if (prop.layout === "/admin") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          );
+        }
+        return null;
+      })}
+      <Redirect from="/admin" to="/admin/dashboard" />
+    </Switch>
+  );
+  
+
+
+
+
+
   const handleImageClick = image => {
     setImage(image);
   };
@@ -93,7 +111,7 @@ export default function Admin({ ...rest }) {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={showRoutes}
         logoText={"SGQ"}
         logo={logo}
         image={image}
