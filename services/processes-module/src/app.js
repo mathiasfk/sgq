@@ -1,8 +1,16 @@
 var express = require('express');
 var app = express();
-app.use(express.json());
+
 
 const db = require('./db');
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.use(express.json());
 
 app.get('/', function(req, res) {
   res.send('Olá do módulo de processos automotivos!');
@@ -14,6 +22,10 @@ app.get('/', function(req, res) {
 // GET
 app.get('/checklist_item', function(req, res) {
   db.execSQLQuery('SELECT * FROM checklist_item;', res);
+});
+// GET
+app.get('/checklist_item/:id', function(req, res) {
+  db.execSQLQuery('SELECT * FROM checklist_item WHERE id =' + req.params.id, res);
 });
 // GET
 app.get('/checklist_item/:id', function(req, res) {
@@ -47,21 +59,21 @@ app.get('/checklist_answer/:id', function(req, res) {
 });
 // POST 
 app.post('/checklist_answer', function(req, res) {
-
-  let insertsItems = `
-  SET @answer_id = LAST_INSERT_ID();`;
-  req.body.forEach(item => {
-    console.log(item);
-    insertsItems += 
-    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item.item_id},${item.answer});
+  let insertsAnswer = 'INSERT INTO processes_db.checklist_answer (id, answer_time) VALUES (NULL, now());'
+  let insertsAnswerItem = ''
+  req.body.type.forEach(item => {
+    insertsAnswerItem += 
+    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item},TRUE);
     `;
   });
 
   db.execMultipleStatements(`
-  INSERT INTO processes_db.checklist_answer (id, answer_time) VALUES (NULL, now());
-  ${insertsItems}
+  ${insertsAnswer}
+  SET @answer_id = LAST_INSERT_ID();
+  ${insertsAnswerItem}
   `, res);
 });
+
 // PUT
 app.put('/checklist_answer/:id', function(req, res) {
   res.status(501).send('not implemented');
