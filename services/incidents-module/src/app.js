@@ -21,7 +21,7 @@ app.get('/', function(req, res) {
 // incident_type
 // GET
 app.get('/incident_type', function(req, res) {
-  db.execSQLQuery('SELECT id, `name` FROM incident_type;', res);
+  db.execSQLQuery('SELECT * FROM incident_type;', res);
 });
 // GET
 app.get('/incident_type/:id', function(req, res) {

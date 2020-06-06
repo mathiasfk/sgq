@@ -1,18 +1,16 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import WorkOffIcon from '@material-ui/icons/WorkOff';
 import Tasks from "components/Tasks/Tasks.js";
-import Cloud from "@material-ui/icons/Cloud";
-import { bugs, website, server } from "variables/general.js";
 import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
-
+import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -43,54 +41,91 @@ const styles = {
   }
 };
 
-const useStyles = makeStyles(styles);
 
 export default function ProcessesPage() {
+  
+  const [tiposChecklist, setTiposChecklist] = useState([]);
+  const [selectedChecklist, setSelectedChecklist] = useState([]);
+  const checkedIndexes = [];
+  const [selectedItemChecklist, setSelectedItemChecklist] = useState();
+  
+  async function fetchData(){
+    const urls = [
+      "http://127.0.0.1:3006/checklist_item",    
+    ];
+    
+    Promise.all(urls.map(url =>
+      fetch(url)
+        .then(checkResponseStatus)                 
+        .then(parseJSON)
+        .catch(error => console.log('Alguma api teve problemas!', error))
+    )).
+    then(results => {
+      setTiposChecklist(results[0]);
+    });
+  }
+
+  const onChangeChecklist = (value) => {
+    setSelectedChecklist(value);
+  }
+
+  function saveChecklist (){
+    const requestOptions = {
+      method: 'POST',
+      mode: "cors",
+      headers: { 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        { 
+          type: selectedChecklist
+        })
+    }; 
+
+    fetch("http://127.0.0.1:3006/checklist_answer", requestOptions)
+    .then((response => {
+      alert("Enviou!");
+    }));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <GridContainer>
+    <GridContainer>      
       <GridItem xs={24} sm={24} md={12}>
           <CustomTabs
-            title="Checagem:"
+            title="Controle de Qualidade:"
             headerColor="primary"
             tabs={[
               {
-                tabName: "Carroceria",
-                tabIcon: BugReport,
-                tabContent: (
+                tabName: "Checklist",
+                tabIcon: PlaylistAddCheckIcon,
+                tabContent: (                  
                   <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
-                  />
+                    checkedIndexes={checkedIndexes}                                 
+                    tasks={tiposChecklist}
+                    onChange={onChangeChecklist}
+                  />                                   
                 )
               },
-              {
-                tabName: "Pintura",
-                tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                )
-              },
-              {
-                tabName: "Motor",
-                tabIcon: Cloud,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
-                  />
-                )
-              }
+                {
+                  tabName: "Paradas e Problemas",
+                  tabIcon: WorkOffIcon,
+                  tabContent: (                  
+                    <Tasks
+                      checkedIndexes={checkedIndexes}                                 
+                      tasks={[]}                      
+                    />                                   
+                  )
+                }
             ]}
           />
         </GridItem>  
         <CardFooter>
-        <Button color="primary">Enviar</Button>
+        <Button onClick={saveChecklist}  color="primary">Enviar</Button>
       </CardFooter>            
     </GridContainer>
   );
