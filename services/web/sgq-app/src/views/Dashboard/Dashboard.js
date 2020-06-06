@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -12,7 +12,6 @@ import LocalOffer from "@material-ui/icons/LocalOffer";
 import Update from "@material-ui/icons/Update";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
 import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Cloud from "@material-ui/icons/Cloud";
@@ -22,12 +21,12 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
 
 import { bugs, website, server } from "variables/general.js";
 
@@ -43,6 +42,46 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
+
+  const [diasSemIncidentes, setDiasSemIncidentes] = useState(10);
+  const [numeroIncidentes, setNumeroIncidentes] = useState(0);
+  const [dateNow, setDateNow] = useState("");
+
+  async function fetchData(){
+    const urls = [
+      "http://127.0.0.1:3004/last_incident",
+      "http://127.0.0.1:3004/incidents_number",
+    ];
+
+    Promise.all(urls.map(url =>
+      fetch(url)
+        .then(checkResponseStatus)                 
+        .then(parseJSON)
+        .catch(error => console.log('Alguma api teve problemas!', error))
+    )).
+    then(results => {
+      let dateNow = new Date();
+      if(results && results[0].length > 0){
+        let dataUltimoIncidente = new Date(results[0][0].incident_time);
+        let difDates = dateNow.getTime() - dataUltimoIncidente.getTime(); 
+  
+        setDiasSemIncidentes(Math.floor(difDates / (1000 * 3600 * 24)));
+      }
+
+      if(results[1]){
+        setNumeroIncidentes(results[1][0].total);
+      }
+
+      setDateNow(dateNow.toLocaleDateString() + " " + dateNow.getHours().toString().padStart(2,0) + ":" + dateNow.getMinutes().toString().padStart(2,0)  + ":" + dateNow.getSeconds().toString().padStart(2,0));
+    });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+
   return (
     <div>
       <GridContainer>
@@ -53,12 +92,12 @@ export default function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Dias sem incidentes</p>
-              <h3 className={classes.cardTitle}>10</h3>
+              <h3 className={classes.cardTitle}>{diasSemIncidentes}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <LocalOffer />
-                Ultima atualização
+                Ultima atualização {dateNow}
               </div>
             </CardFooter>
           </Card>
@@ -76,6 +115,23 @@ export default function Dashboard() {
               <div className={classes.stats}>
                 <DateRange />
                 Ano de 2020
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="danger" stats icon>
+              <CardIcon color="danger">
+                <Icon>info_outline</Icon>
+              </CardIcon>
+              <p className={classes.cardCategory}>Incidentes em aberto</p>
+              <h3 className={classes.cardTitle}>{numeroIncidentes}</h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <LocalOffer />
+                Ultima atualização {dateNow}
               </div>
             </CardFooter>
           </Card>

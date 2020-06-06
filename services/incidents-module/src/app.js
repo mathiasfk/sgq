@@ -118,12 +118,17 @@ app.put('/incident_conseq/:id', function(req, res) {
 });
 // DELETE
 app.delete('/incident_conseq/:id', function(req, res) {
-  db.execSQLQuery('DELETE FROM incident_conseq WHERE id =' + req.params.id, res);
+  db.execSQLQuery('DELETE FROM incident_conseq WHERE incident_id =' + req.params.id, res);
 });
 
 //Get the last incident
 app.get('/last_incident', function(req, res) {
   db.execSQLQuery('SELECT * FROM incident ORDER BY incident_time DESC limit 1', res);
+});
+
+//Get the number of open incidents
+app.get('/incidents_number', function(req, res) {
+  db.execSQLQuery('SELECT COUNT(*) as total FROM incident WHERE `status` <> "Finalizado";', res);
 });
 
 // Start server

@@ -111,7 +111,9 @@ export default function IncidentsPage() {
   const doIncidentFetch = (url, requestOpt, msgResponse) => {
     fetch(url, requestOpt)
     .then((response => {
-      alert(msgResponse);
+      if(msgResponse.length > 0){
+        alert(msgResponse);
+      }
 
       //recarrega a lista de incidentes
       fetch("http://127.0.0.1:3004/incident")
@@ -133,7 +135,12 @@ export default function IncidentsPage() {
       },
     }; 
 
-    doIncidentFetch("http://127.0.0.1:3004/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
+    var justificativa = prompt("Informe uma justificativa", "");
+    if(justificativa != null && justificativa != ""){
+      fetch("http://127.0.0.1:3004/incident_conseq/" + incidentId, requestOptions)
+        .then(() => console.log("Consequencias de incidentes removidas."));
+      doIncidentFetch("http://127.0.0.1:3004/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
+    }
   }
 
   function saveIncident (){
