@@ -31,8 +31,9 @@ export default function Tasks(props) {
       newChecked.splice(currentIndex, 1);
     }
     setChecked(newChecked);
+    onChange(newChecked);
   };
-  const {tasks, edit = false, remove = false} = props;
+  const {tasks, edit = false, remove = false, onChange} = props;
   const tableCellClasses = classnames(classes.tableCell, {
   });
   return (

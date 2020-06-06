@@ -33,49 +33,56 @@ const dashboardRoutes = [
     name: "Dashboard",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "all",
   },
   {
     path: "/table",
     name: "Processos Automotivos",    
     icon: "content_paste",
     component: ProcessesPage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "all",
   },
   {
     path: "/incidents",
     name: "Incidentes e Problemas",    
     icon: LibraryBooks,
     component: IncidentsPage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "all",
   },
   {
     path: "/non-conformities",
     name: "Não Conformidades",    
     icon: LibraryBooks,
     component: NonConformitiesPage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "all",
   },
   {
     path: "/divulgation",
     name: "Divulgação e Transparência",    
     icon: LibraryBooks,
     component: DivulgationPage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "all",
   },
   {
     path: "/bi",
     name: "Business Intelligence",    
     icon: LibraryBooks,
     component: BusinessIntelligencePage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "admin",
   },
   {
     path: "/compliance",
     name: "Compliance",    
     icon: LibraryBooks,
     component: CompliancePage,
-    layout: "/admin"
+    layout: "/admin",
+    group: "admin",
   },
 ];
 

@@ -26,6 +26,15 @@ services:
     networks:
       - microservices
 
+  auth-service:
+    container_name: auth-service
+    build: ./services/auth-service/
+    restart: unless-stopped
+    ports:
+      - 4000:4000
+    networks:
+      - microservices
+
   bi-module:
     container_name: bi-module
     build: ./services/bi-module/
@@ -77,6 +86,18 @@ services:
     restart: unless-stopped
     ports:
       - 3006:3006 # host:container
+    networks:
+      - microservices
+
+  mongo:
+    container_name: users-db
+    image: mongo:3.6.18
+    restart: always
+    # ports:
+    #   - 27017:27017 # host:container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongorootpassword
     networks:
       - microservices
 
