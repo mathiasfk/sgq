@@ -131,6 +131,10 @@ app.get('/incidents_number', function(req, res) {
   db.execSQLQuery('SELECT COUNT(*) as total FROM incident WHERE `status` <> "Finalizado";', res);
 });
 
+app.get('/incidents_per_month', function(req, res) {
+  db.execSQLQuery('SELECT COUNT(*) as total, MONTH(incident_time) as mes FROM incident WHERE YEAR(incident_time) = YEAR(NOW()) GROUP BY MONTH(incident_time);', res);
+});
+
 // Start server
 app.listen(3004, function() {
   console.log('Módulo de incidentes e problemas escutando na porta 3004!');

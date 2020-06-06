@@ -31,9 +31,7 @@ import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
 import { bugs, website, server } from "variables/general.js";
 
 import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
+  incidentesChart,
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -45,12 +43,29 @@ export default function Dashboard() {
 
   const [diasSemIncidentes, setDiasSemIncidentes] = useState(10);
   const [numeroIncidentes, setNumeroIncidentes] = useState(0);
+  const [dataChartIncidentes, setDataChartIncidentes] = useState({
+    labels: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  series: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]});
   const [dateNow, setDateNow] = useState("");
 
   async function fetchData(){
     const urls = [
       "http://127.0.0.1:3004/last_incident",
       "http://127.0.0.1:3004/incidents_number",
+      "http://127.0.0.1:3004/incidents_per_month",
     ];
 
     Promise.all(urls.map(url =>
@@ -72,9 +87,18 @@ export default function Dashboard() {
         setNumeroIncidentes(results[1][0].total);
       }
 
+      if(results[2]){
+        let incidentsCount = results[2];
+        for(let i=0; i < incidentsCount.length; i++){
+          dataChartIncidentes.series[0][incidentsCount[i].mes-1] = incidentsCount[i].total;
+        }
+        setDataChartIncidentes(dataChartIncidentes);
+      }
+
       setDateNow(dateNow.toLocaleDateString() + " " + dateNow.getHours().toString().padStart(2,0) + ":" + dateNow.getMinutes().toString().padStart(2,0)  + ":" + dateNow.getSeconds().toString().padStart(2,0));
     });
   }
+  
 
   useEffect(() => {
     fetchData();
@@ -181,72 +205,23 @@ export default function Dashboard() {
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={emailsSubscriptionChart.data}
-                type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
             <CardHeader color="danger">
               <ChartistGraph
                 className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
+                data={dataChartIncidentes}
+                type="Bar"
+                options={incidentesChart.options}
+                responsiveOptions={incidentesChart.responsiveOptions}
+                listener={incidentesChart.animation}
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Completed Tasks</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
+              <h4 className={classes.cardTitle}>Incidentes</h4>
+              <p className={classes.cardCategory}>Numero de incidentes registrados por mes</p>
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
+                <AccessTime /> Ultima atualização {dateNow}
               </div>
             </CardFooter>
           </Card>
