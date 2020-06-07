@@ -16,6 +16,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CustomTable from "components/CustomTable/CustomTable.js";
+import CustomSnackbar from "components/CustomSnackbar/CustomSnackbar.js";
 
 // helpers
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
@@ -27,6 +28,14 @@ function ChecklistWithHistoric(category){
   const [selectedChecklist, setSelectedChecklist] = useState([]);
   const [previousAnswers, setPreviousAnswers] = useState(null);
   const checkedIndexes = [];
+
+  const [success, setSuccess] = React.useState(false);
+  const [failure, setFailure] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("");
+  const [failureMessage, setFailureMessage] = React.useState("");
+
+  const showFailure = msg => {setFailureMessage(msg); setFailure(true)}
+  const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)}
 
   async function fetchChecklist(category){
     const urls = [
@@ -83,7 +92,7 @@ function ChecklistWithHistoric(category){
     .then((response => {
       fetchHistory(category);
       setSelectedChecklist([]);
-      alert("Enviou!"); // TODO: Snackbar; Tratar falha
+      showSuccess("Enviado com sucesso!");
     }));
   }
 
@@ -120,12 +129,14 @@ function ChecklistWithHistoric(category){
                     "username": "Resposável",
                     "answer_time": "Horário",
                     }}
-                    content={previousAnswers} onDelete={() => alert("Não foi possível deletar.")}></CustomTable>
+                    content={previousAnswers} onDelete={() => {showFailure("Não foi possível deletar!");}}></CustomTable>
                 )
               }
             ]}
           />
           <Button onClick={() => saveChecklist(category)}  color="primary">Enviar</Button>
+          <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
+          <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setSuccess}/>
         </CardBody>
         </Card>
       );
