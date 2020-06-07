@@ -51,7 +51,7 @@ export default function ProcessesPage() {
   
   async function fetchData(){
     const urls = [
-      "http://127.0.0.1:3006/checklist_item",    
+      "http://127.0.0.1:3000/checklist_item",    
     ];
     
     Promise.all(urls.map(url =>
@@ -83,7 +83,7 @@ export default function ProcessesPage() {
         })
     }; 
 
-    fetch("http://127.0.0.1:3006/checklist_answer", requestOptions)
+    fetch("http://127.0.0.1:3000/checklist_answer", requestOptions)
     .then((response => {
       alert("Enviou!");
     }));
@@ -126,6 +126,7 @@ export default function ProcessesPage() {
         </GridItem>  
         <CardFooter>
         <Button onClick={saveChecklist}  color="primary">Enviar</Button>
+        <Button onClick={saveChecklist}  color="warning" href="/admin/incidents">Paradas e problemas</Button>
       </CardFooter>            
     </GridContainer>
   );

@@ -10,6 +10,7 @@ Para rodar é necessário:
 Sistemas operacionais validados:
 
 * Windows 10
+* Ubuntu
 
 ## Subindo o ambiente
 
@@ -22,6 +23,7 @@ Isso irá subir todos os serviços, inclusive o web.
 
 - Web: http://localhost:9000
 - API: http://localhost:3000
+- Autenticação: http://localhost:4000
 
 ## Testando os microsserviços
 
