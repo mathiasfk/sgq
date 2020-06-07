@@ -69,30 +69,13 @@ const dailySalesChart = {
 // // // Email Subscriptions
 // #############################
 
-const emailsSubscriptionChart = {
-  data: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ],
-    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
-  },
+const incidentesChart = {
   options: {
     axisX: {
       showGrid: false
     },
     low: 0,
-    high: 1000,
+    high: 30,
     chartPadding: {
       top: 0,
       right: 5,
@@ -185,6 +168,6 @@ const completedTasksChart = {
 
 module.exports = {
   dailySalesChart,
-  emailsSubscriptionChart,
+  incidentesChart,
   completedTasksChart
 };

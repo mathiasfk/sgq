@@ -6,6 +6,7 @@ export default function CustomTable(props) {
     const {
         content,
         columns,
+        onDelete
       } = props;
 
     var translate = (from, dic) => {
@@ -23,6 +24,7 @@ export default function CustomTable(props) {
             tableHeaderColor="primary"
             tableHead={head}
             tableData={data}
+            onDelete={onDelete}
         />
     );
 }

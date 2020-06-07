@@ -9,7 +9,10 @@ import {
   defaultFont
 } from "assets/jss/material-dashboard-react.js";
 
+import tooltipStyle from "assets/jss/material-dashboard-react/tooltipStyle.js";
+
 const tableStyle = theme => ({
+  ...tooltipStyle,
   warningTableHeader: {
     color: warningColor[0]
   },
@@ -71,7 +74,27 @@ const tableStyle = theme => ({
     display: "table-row",
     outline: "none",
     verticalAlign: "middle"
-  }
+  },
+  close: {
+    backgroundColor: "transparent",
+    color: dangerColor[0],
+    boxShadow: "none"
+  },
+  tableActionButton: {
+    width: "27px",
+    height: "27px",
+    padding: "0"
+  },
+  tableActionButtonIcon: {
+    width: "17px",
+    height: "17px"
+  },
+  tableActions: {
+    display: "flex",
+    border: "none",
+    padding: "12px 8px !important",
+    verticalAlign: "middle"
+  },
 });
 
 export default tableStyle;

@@ -15,6 +15,7 @@ import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
+import status from "variables/incidents.js"
 const styles = {
   typo: {
     paddingLeft: "25%",
@@ -54,15 +55,20 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function IncidentsPage() {
-  const classes = useStyles();
   const [tiposIncidentes, setTiposIncidentes] = useState([]);
   const [operationalConsequences, setOperationalConsequences] = useState([]);
   const [indicents, setIndicents] = useState(null);
 
   const [selectedTipoIncidente, setSelectedTipoIncidente] = useState();
+  const [selectedStatus, setSelectedStatus] = useState();
   const checkedIndexes = [];
   const [comments, setComments] = useState();
   const [selectedOperationalConsequences, setSelectedOperationalConsequences] = useState([]);
+  const status = [
+    {id: "Pendente", name: "Pendente"}, 
+    {id: "Em Andamento", name: "Em Andamento"},
+    {id: "Finalizado", name: "Finalizado"},
+  ];
 
   async function fetchData(){
     const urls = [
@@ -94,8 +100,47 @@ export default function IncidentsPage() {
     setSelectedTipoIncidente(value);
   }
 
+  const onChangeStatus = (value) => {
+    setSelectedStatus(value);
+  }
+
   const onChangeOperationalConsequences = (value) => {
     setSelectedOperationalConsequences(value);
+  }
+
+  const doIncidentFetch = (url, requestOpt, msgResponse) => {
+    fetch(url, requestOpt)
+    .then((response => {
+      if(msgResponse.length > 0){
+        alert(msgResponse);
+      }
+
+      //recarrega a lista de incidentes
+      fetch("http://127.0.0.1:3004/incident")
+        .then(checkResponseStatus)                 
+        .then(parseJSON)
+        .then(incidentes => setIndicents(incidentes))
+    }));
+  }
+
+  const onDeleteIncident = (value) => {
+    const incidentId = value[0];
+
+    const requestOptions = {
+      method: 'DELETE',
+      mode: "cors",
+       headers: { 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }; 
+
+    var justificativa = prompt("Informe uma justificativa", "");
+    if(justificativa != null && justificativa != ""){
+      fetch("http://127.0.0.1:3004/incident_conseq/" + incidentId, requestOptions)
+        .then(() => console.log("Consequencias de incidentes removidas."));
+      doIncidentFetch("http://127.0.0.1:3004/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
+    }
   }
 
   function saveIncident (){
@@ -107,17 +152,15 @@ export default function IncidentsPage() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(
-        { 
-          type: selectedTipoIncidente,
-          comments: comments,
-          consequence_type: selectedOperationalConsequences,
-        })
+      { 
+        type: selectedTipoIncidente,
+        comments: comments,
+        consequence_type: selectedOperationalConsequences,
+        status: selectedStatus,
+      })
     }; 
 
-    fetch("http://127.0.0.1:3004/incident", requestOptions)
-    .then((response => {
-      alert("Enviou!");
-    }));
+    doIncidentFetch("http://127.0.0.1:3004/incident", requestOptions, "Incidente cadastrado com sucesso!");
   };
 
   useEffect(() => {
@@ -139,7 +182,7 @@ export default function IncidentsPage() {
                     <GridContainer>
                     <GridItem xs={12} sm={12} md={6}>
                       <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
+                        <GridItem xs={12} sm={12} md={12}>
                           <CustomSelect 
                             labelText="Tipo de incidente"
                             id="incident-type"
@@ -148,6 +191,17 @@ export default function IncidentsPage() {
                               fullWidth: true
                             }}
                             options={tiposIncidentes}
+                          />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={12}>
+                          <CustomSelect 
+                            labelText="Status"
+                            id="incident-status"
+                            onChange={onChangeStatus}
+                            formControlProps={{
+                              fullWidth: true
+                            }}
+                            options={status}
                           />
                         </GridItem>
                         <GridItem xs={12} sm={12} md={12}>
@@ -191,10 +245,11 @@ export default function IncidentsPage() {
                     <CustomTable columns={{
                       "id": "ID",
                       "incident_type": "Tipo",
+                      "status": "Status",
                       "incident_time": "Data", 
                       "comments": "Comentários",
                       }}
-                      content={indicents}></CustomTable>
+                      content={indicents} onDelete={onDeleteIncident}></CustomTable>
                   </CardBody>
                 </Card>
               )
