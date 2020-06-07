@@ -16,8 +16,8 @@ export default function CustomTable(props) {
     };
 
     var columnDic = columns || {};
-    var head = content ? Object.keys(content[0]).map(col => translate(col,columnDic)) : [];
-    var data = content ? content.map(item => Object.values(item)) : [];
+    var head = (content && content.length > 0) ? Object.keys(content[0]).map(col => translate(col,columnDic)) : [];
+    var data = (content && content.length > 0) ? content.map(item => Object.values(item).map(e => String(e))) : [];
 
     return (
         <Table

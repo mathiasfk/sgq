@@ -16,7 +16,10 @@ import CardFooter from "components/Card/CardFooter.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CustomTable from "components/CustomTable/CustomTable.js";
+
+// helpers
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
+import User from "utils/User.js";
 
 function ChecklistWithHistoric(category){
 
@@ -37,7 +40,7 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
-      setTiposChecklist(results[0].map(e => {return {id : e.id, name: e.name};}));
+        setTiposChecklist(results[0].map(e => {return {id : e.id, name: e.name};}));
     });
   }
 
@@ -53,8 +56,7 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
-      console.log(results[0]);
-      setPreviousAnswers(results[0].map(e => {return {id : e.id, answer_time: e.answer_time};}));
+      setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time};}));
     });
   }
 
@@ -77,7 +79,7 @@ function ChecklistWithHistoric(category){
         })
     }; 
 
-    fetch(`http://127.0.0.1:3000/checklist_answer?category=${category}`, requestOptions)
+    fetch(`http://127.0.0.1:3000/checklist_answer?category=${category}&username=${User.getUsername()}`, requestOptions)
     .then((response => {
       fetchHistory(category);
       setSelectedChecklist([]);
@@ -115,6 +117,7 @@ function ChecklistWithHistoric(category){
                 tabContent: (
                   <CustomTable columns={{
                     "id": "ID",
+                    "username": "Resposável",
                     "answer_time": "Horário",
                     }}
                     content={previousAnswers} onDelete={() => alert("Não foi possível deletar.")}></CustomTable>

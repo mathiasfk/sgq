@@ -18,6 +18,7 @@ CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 CREATE TABLE IF NOT EXISTS checklist_answer (
     id INT NOT NULL AUTO_INCREMENT, 
     category VARCHAR(255),
+    username VARCHAR(255),
     answer_time TIMESTAMP,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB

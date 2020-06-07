@@ -11,6 +11,7 @@ import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 // helpers
 import routes from "../routes.js";
+import User from "../utils/User.js";
 // style
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
@@ -30,12 +31,8 @@ export default function Admin({ ...rest }) {
   const [color, setColor] = React.useState("blue");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  let user = "";
-  let group = "";
-  if(localStorage.getItem('user')){
-    user = JSON.parse(localStorage.getItem('user')).username;
-    group = user == "lucas.gustavo" ? "operario" : "admin";
-  }
+
+  let group = User.getGroup();
 
   function filterRouters(){
     return routes.filter(t => t.group === group || t.group === "all");
