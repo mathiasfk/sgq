@@ -37,7 +37,7 @@ const dashboardRoutes = [
     group: "all",
   },
   {
-    path: "/table",
+    path: "/processes",
     name: "Processos Automotivos",    
     icon: "content_paste",
     component: ProcessesPage,

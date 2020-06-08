@@ -21,19 +21,16 @@ app.get('/', function(req, res) {
 // checklist_item
 // GET
 app.get('/checklist_item', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item;', res);
+  let whereClause = req.query.category ? `WHERE category='${req.query.category}'`:'';
+  db.execSQLQuery(`SELECT * FROM checklist_item ${whereClause};`, res);
 });
 // GET
 app.get('/checklist_item/:id', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item WHERE id =' + req.params.id, res);
-});
-// GET
-app.get('/checklist_item/:id', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item WHERE id =' + req.params.id, res);
+  db.execSQLQuery(`SELECT * FROM checklist_item WHERE id=${req.params.id};`, res);
 });
 // POST
 app.post('/checklist_item', function(req, res) {
-  db.execSQLQuery('INSERT INTO checklist_item (id, item_name) VALUES (NULL, "' + req.query.name + '");', res);
+  db.execSQLQuery(`INSERT INTO checklist_item (id, category, name) VALUES (NULL, '${req.query.category}', '${req.query.name}');`, res);
 });
 // PUT
 app.put('/checklist_item/:id', function(req, res) {
@@ -48,7 +45,8 @@ app.delete('/checklist_item/:id', function(req, res) {
 // checklist_answer
 // GET
 app.get('/checklist_answer', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_answer;', res);
+  let whereClause = req.query.category ? `WHERE category='${req.query.category}'`:'';
+  db.execSQLQuery(`SELECT * FROM checklist_answer ${whereClause};`, res);
 });
 // GET 
 app.get('/checklist_answer/:id', function(req, res) {
@@ -59,16 +57,15 @@ app.get('/checklist_answer/:id', function(req, res) {
 });
 // POST 
 app.post('/checklist_answer', function(req, res) {
-  let insertsAnswer = 'INSERT INTO processes_db.checklist_answer (id, answer_time) VALUES (NULL, now());'
-  let insertsAnswerItem = ''
-  req.body.type.forEach(item => {
+  let insertsAnswerItem = '';
+  req.body.checklist_answer.forEach(item => {
     insertsAnswerItem += 
-    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item},TRUE);
+    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item.id},${item.answer});
     `;
   });
-
+  //TODO: verificar se o usuário está autenticado
   db.execMultipleStatements(`
-  ${insertsAnswer}
+  INSERT INTO processes_db.checklist_answer (id, category, username, answer_time) VALUES (NULL, '${req.query.category}', '${req.query.username}', now());
   SET @answer_id = LAST_INSERT_ID();
   ${insertsAnswerItem}
   `, res);

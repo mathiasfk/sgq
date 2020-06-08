@@ -7,7 +7,8 @@ function initConnection(multipleStatements = false){
     user     : 'sgq',
     password : 'super-secure-password',
     database : 'processes_db',
-    multipleStatements: multipleStatements
+    multipleStatements: multipleStatements,
+    charset: "latin1_swedish_ci"
   });
 }
 

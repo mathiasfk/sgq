@@ -8,16 +8,21 @@ FLUSH PRIVILEGES;
 
 
 CREATE TABLE IF NOT EXISTS checklist_item (
-    id INT NOT NULL AUTO_INCREMENT, 
+    id INT NOT NULL AUTO_INCREMENT,
+    category VARCHAR(255),
     name VARCHAR(255),
     PRIMARY KEY (id)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB 
+CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 
 CREATE TABLE IF NOT EXISTS checklist_answer (
     id INT NOT NULL AUTO_INCREMENT, 
+    category VARCHAR(255),
+    username VARCHAR(255),
     answer_time TIMESTAMP,
     PRIMARY KEY (id)
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB
+CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 
 CREATE TABLE IF NOT EXISTS checklist_answer_item (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -31,7 +36,21 @@ CREATE TABLE IF NOT EXISTS checklist_answer_item (
     CONSTRAINT FOREIGN KEY (item_id)
         REFERENCES checklist_item(id)
         ON DELETE CASCADE
-) ENGINE=InnoDB ;
+) ENGINE=InnoDB
+CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 
-REPLACE INTO checklist_item (id, name) values (1,"Carroceria"), (2,"Pintura"), (3,"Motor"), (4,"Manual de Instrução"), (5,"Extintor de Incêndio"),(6,"Macaco Hidraulico");
+REPLACE INTO checklist_item (category, name) values 
+("Carroceria", "Integridade estrutural"), 
+("Carroceria", "Peso"), 
+("Carroceria", "Solda");
+
+REPLACE INTO checklist_item (category, name) values 
+("Pintura", "Inspeção visual"), 
+("Pintura", "Blabla"),
+("Pintura", "Espectrometria");
+
+REPLACE INTO checklist_item (category, name) values 
+("Motor", "Integridade estrutural"), 
+("Motor", "Peso"), 
+("Motor", "Funcionamento");
 
