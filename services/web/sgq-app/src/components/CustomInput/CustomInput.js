@@ -24,8 +24,10 @@ export default function CustomInput(props) {
     inputProps,
     error,
     success,
-    onChange
+    onChange,
+    value
   } = props;
+  
 
   const handleChange = (event) => {
     onChange(event.target.value);
@@ -67,6 +69,7 @@ export default function CustomInput(props) {
         id={id}
         {...inputProps}
         onChange={handleChange}
+        value={value}
       />
       {error ? (
         <Clear className={classes.feedback + " " + classes.labelRootError} />

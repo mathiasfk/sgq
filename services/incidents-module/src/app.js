@@ -70,7 +70,9 @@ app.post('/incident', function(req, res) {
 });
 // PUT
 app.put('/incident/:id', function(req, res) {
-  res.status(501).send('not implemented');
+  db.execSQLQuery('UPDATE incident SET incident_type = "' + req.body.type + '", ' +
+  'comments = "' + req.body.comments + '",' +
+  '`status` = "' + req.body.status + '" WHERE id =' + req.params.id, res);
 });
 // DELETE
 app.delete('/incident/:id', function(req, res) {
