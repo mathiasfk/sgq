@@ -71,7 +71,7 @@ export default function IncidentsPage() {
   ];
   const tabsRef = React.createRef();
   let [editionMode, setEditionMode] = useState(false);
-  let currentIncidentId = null;
+  let [currentIncidentId, setCUrrentIncidentId] = useState(null);
   let [incidentTabName, setIncidentTabName] = useState("Registrar Incidente");
 
   async function fetchData(){
@@ -135,7 +135,7 @@ export default function IncidentsPage() {
     //altera o nome da tab
     setIncidentTabName("Atualizar incidente");
 
-    currentIncidentId = value[0];
+    setCUrrentIncidentId(value[0]);
 
     setSelectedTipoIncidente(value[1]);
     setSelectedStatus(value[3]);
