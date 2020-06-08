@@ -57,7 +57,7 @@ export default function Admin({ ...rest }) {
         }
         return null;
       })}
-      <Redirect from="/admin" to="/admin/dashboard" />
+      <Redirect from="/admin" to="/admin/bi" />
     </Switch>
   );
   

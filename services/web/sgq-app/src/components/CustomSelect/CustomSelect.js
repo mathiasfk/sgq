@@ -20,10 +20,11 @@ export default function CustomSelect(props) {
       id,
       labelProps,
       options,
-      onChange
+      onChange,
+      selectedValue,
     } = props;
 
-    const [state, setState] = React.useState('');
+    const [state, setState] = React.useState(selectedValue);
 
     const handleChange = (event) => {
         setState(event.target.value);

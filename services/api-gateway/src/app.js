@@ -8,6 +8,13 @@ const app = express();
 app.use(logger('dev')); // log HTTP requests
 app.use(helmet()); // some security
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // Proxy configurations
 const biProxy = httpProxy('http://bi-module:3001');
 const complianceProxy = httpProxy('http://compliance-module:3002');

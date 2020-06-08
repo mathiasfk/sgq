@@ -69,12 +69,16 @@ export default function IncidentsPage() {
     {id: "Em Andamento", name: "Em Andamento"},
     {id: "Finalizado", name: "Finalizado"},
   ];
+  const tabsRef = React.createRef();
+  let [editionMode, setEditionMode] = useState(false);
+  let currentIncidentId = null;
+  let [incidentTabName, setIncidentTabName] = useState("Registrar Incidente");
 
   async function fetchData(){
     const urls = [
-      "http://127.0.0.1:3004/incident_type",
-      "http://127.0.0.1:3004/incident_conseq_type",
-      "http://127.0.0.1:3004/incident",
+      "http://127.0.0.1:3000/incident_type",
+      "http://127.0.0.1:3000/incident_conseq_type",
+      "http://127.0.0.1:3000/incident",
     ];
 
     Promise.all(urls.map(url =>
@@ -109,18 +113,36 @@ export default function IncidentsPage() {
   }
 
   const doIncidentFetch = (url, requestOpt, msgResponse) => {
-    fetch(url, requestOpt)
+    return fetch(url, requestOpt)
     .then((response => {
       if(msgResponse.length > 0){
         alert(msgResponse);
       }
 
       //recarrega a lista de incidentes
-      fetch("http://127.0.0.1:3004/incident")
+      fetch("http://127.0.0.1:3000/incident")
         .then(checkResponseStatus)                 
         .then(parseJSON)
         .then(incidentes => setIndicents(incidentes))
     }));
+  }
+
+  const onEditIncident = (value) => {
+    const incidenteTab = document.getElementsByClassName("MuiTab-wrapper")[0];
+    //seta o foco para a tab de infos de incidentes
+    incidenteTab.click();
+
+    //altera o nome da tab
+    setIncidentTabName("Atualizar incidente");
+
+    currentIncidentId = value[0];
+
+    setSelectedTipoIncidente(value[1]);
+    setSelectedStatus(value[3]);
+    setComments(value[4]);
+
+    //esconde painel de consequencias, pois não sera possivel edita-la
+    setEditionMode(true);
   }
 
   const onDeleteIncident = (value) => {
@@ -137,10 +159,35 @@ export default function IncidentsPage() {
 
     var justificativa = prompt("Informe uma justificativa", "");
     if(justificativa != null && justificativa != ""){
-      fetch("http://127.0.0.1:3004/incident_conseq/" + incidentId, requestOptions)
+      fetch("http://127.0.0.1:3000/incident_conseq/" + incidentId, requestOptions)
         .then(() => console.log("Consequencias de incidentes removidas."));
-      doIncidentFetch("http://127.0.0.1:3004/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
+      doIncidentFetch("http://127.0.0.1:3000/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
     }
+  }
+
+  function updateIncident(){
+    const requestOptions = {
+      method: 'PUT',
+      mode: "cors",
+      headers: { 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+      { 
+        type: selectedTipoIncidente,
+        comments: comments,
+        status: selectedStatus,
+      })
+    }; 
+
+    doIncidentFetch("http://127.0.0.1:3000/incident/" + currentIncidentId, 
+    requestOptions, 
+    "Incidente atualizado com sucesso!")
+    .then(() => {
+      setIncidentTabName("Registrar incidente");
+      setEditionMode(false);
+    });
   }
 
   function saveIncident (){
@@ -160,7 +207,7 @@ export default function IncidentsPage() {
       })
     }; 
 
-    doIncidentFetch("http://127.0.0.1:3004/incident", requestOptions, "Incidente cadastrado com sucesso!");
+    doIncidentFetch("http://127.0.0.1:3000/incident", requestOptions, "Incidente cadastrado com sucesso!");
   };
 
   useEffect(() => {
@@ -171,67 +218,76 @@ export default function IncidentsPage() {
     <GridContainer>
     <GridItem xs={12} sm={12} md={12}>
       <CustomTabs
+          ref={tabsRef}
           headerColor="primary"
           tabs={[
             {
-              tabName: "Reportar incidente",
+              tabName: incidentTabName,
               tabIcon: "",
               tabContent: (
                 <Card>
                   <CardBody>
                     <GridContainer>
-                    <GridItem xs={12} sm={12} md={6}>
-                      <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                          <CustomSelect 
-                            labelText="Tipo de incidente"
-                            id="incident-type"
-                            onChange={onChangeIncidentType}
+                      <GridItem xs={12} sm={12} md={6}>
+                        <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                            <CustomSelect 
+                              labelText="Tipo de incidente"
+                              id="incident-type"
+                              onChange={onChangeIncidentType}
+                              formControlProps={{
+                                fullWidth: true
+                              }}
+                              options={tiposIncidentes}
+                              selectedValue={selectedTipoIncidente}
+                            />
+                          </GridItem>
+                          <GridItem xs={12} sm={12} md={12}>
+                            <CustomSelect 
+                              labelText="Status"
+                              id="incident-status"
+                              onChange={onChangeStatus}
+                              formControlProps={{
+                                fullWidth: true
+                              }}
+                              options={status}
+                              selectedValue={selectedStatus}
+                            />
+                          </GridItem>
+                          <GridItem xs={12} sm={12} md={12}>
+                          <CustomInput
+                            labelText="Descreva detalhes adicionais do incidente se necessário."
+                            id="indicent-comments"
                             formControlProps={{
                               fullWidth: true
                             }}
-                            options={tiposIncidentes}
-                          />
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={12}>
-                          <CustomSelect 
-                            labelText="Status"
-                            id="incident-status"
-                            onChange={onChangeStatus}
-                            formControlProps={{
-                              fullWidth: true
+                            inputProps={{
+                              multiline: true,
+                              rows: 5
                             }}
-                            options={status}
+                            onChange={onChangeComments}
+                            value={comments}
                           />
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={12}>
-                        <CustomInput
-                          labelText="Descreva detalhes adicionais do incidente se necessário."
-                          id="indicent-comments"
-                          formControlProps={{
-                            fullWidth: true
-                          }}
-                          inputProps={{
-                            multiline: true,
-                            rows: 5
-                          }}
-                          onChange={onChangeComments}
-                        />
+                        </GridContainer>
                       </GridItem>
-                      </GridContainer>
-                    </GridItem>
-                      <GridItem xs={12} sm={12} md={4}>
-                      <InputLabel style={{ color: "#AAAAAA" }}>Consequências Operacionais</InputLabel>
-                      <Tasks
-                        tasks={operationalConsequences}
-                        onChange={onChangeOperationalConsequences}
-                        checkedIndexes = {checkedIndexes}
-                      />
-                      </GridItem>
+                      {editionMode ? null :
+                        <GridItem xs={12} sm={12} md={4}>
+                          <InputLabel style={{ color: "#AAAAAA" }}>Consequências Operacionais</InputLabel>
+                          <Tasks
+                            tasks={operationalConsequences}
+                            onChange={onChangeOperationalConsequences}
+                            checkedIndexes = {checkedIndexes}
+                          />
+                        </GridItem>}
                     </GridContainer>
                   </CardBody>
                   <CardFooter>
-                    <Button onClick={saveIncident} color="primary">Enviar</Button>
+                    {editionMode ? 
+                      <Button onClick={updateIncident} color="primary">Atualizar</Button>
+                      :
+                      <Button onClick={saveIncident} color="primary">Enviar</Button>
+                    } 
                   </CardFooter>
                 </Card>
               )
@@ -249,7 +305,10 @@ export default function IncidentsPage() {
                       "incident_time": "Data", 
                       "comments": "Comentários",
                       }}
-                      content={indicents} onDelete={onDeleteIncident}></CustomTable>
+                      content={indicents} 
+                      onDelete={onDeleteIncident}
+                      onEdit={onEditIncident}
+                      ></CustomTable>
                   </CardBody>
                 </Card>
               )

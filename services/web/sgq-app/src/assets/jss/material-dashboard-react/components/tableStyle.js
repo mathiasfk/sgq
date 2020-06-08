@@ -80,6 +80,11 @@ const tableStyle = theme => ({
     color: dangerColor[0],
     boxShadow: "none"
   },
+  edit: {
+    backgroundColor: "transparent",
+    color: primaryColor[0],
+    boxShadow: "none"
+  },
   tableActionButton: {
     width: "27px",
     height: "27px",
