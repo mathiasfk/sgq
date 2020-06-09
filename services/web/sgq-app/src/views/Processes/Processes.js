@@ -27,7 +27,6 @@ function ChecklistWithHistoric(category){
   const [tiposChecklist, setTiposChecklist] = useState([]);
   const [selectedChecklist, setSelectedChecklist] = useState([]);
   const [previousAnswers, setPreviousAnswers] = useState(null);
-  const checkedIndexes = [];
 
   const [success, setSuccess] = React.useState(false);
   const [failure, setFailure] = React.useState(false);
@@ -114,7 +113,8 @@ function ChecklistWithHistoric(category){
                 tabIcon: PlaylistAddCheckIcon,
                 tabContent: (
                   <Tasks
-                    checkedIndexes={checkedIndexes}
+                    checked={selectedChecklist}
+                    setChecked={setSelectedChecklist}
                     tasks={tiposChecklist}
                     onChange={onChangeChecklist}
                   />

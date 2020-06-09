@@ -21,7 +21,6 @@ const useStyles = makeStyles(styles);
 
 export default function Tasks(props) {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([...props.checkedIndexes]);
   const handleToggle = value => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -33,7 +32,7 @@ export default function Tasks(props) {
     setChecked(newChecked);
     onChange(newChecked);
   };
-  const {tasks, edit = false, remove = false, onChange} = props;
+  const {tasks, edit = false, remove = false, onChange, checked, setChecked} = props;
   const tableCellClasses = classnames(classes.tableCell, {
   });
   return (
@@ -104,7 +103,8 @@ export default function Tasks(props) {
 
 Tasks.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object),
-  checkedIndexes: PropTypes.array,
+  checked: PropTypes.arrayOf(PropTypes.number),
+  setChecked: PropTypes.func,
   edit: PropTypes.bool,
   remove: PropTypes.bool
 };
