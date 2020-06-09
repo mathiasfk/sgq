@@ -15,7 +15,7 @@ import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
-import status from "variables/incidents.js"
+
 const styles = {
   typo: {
     paddingLeft: "25%",
@@ -57,11 +57,11 @@ const useStyles = makeStyles(styles);
 export default function IncidentsPage() {
   const [tiposIncidentes, setTiposIncidentes] = useState([]);
   const [operationalConsequences, setOperationalConsequences] = useState([]);
-  const [indicents, setIndicents] = useState(null);
+  const [incidents, setIncidents] = useState(null);
 
   const [selectedTipoIncidente, setSelectedTipoIncidente] = useState();
   const [selectedStatus, setSelectedStatus] = useState();
-  const checkedIndexes = [];
+  const [checkedIndexes, setCheckedIndexes] = useState([]);
   const [comments, setComments] = useState();
   const [selectedOperationalConsequences, setSelectedOperationalConsequences] = useState([]);
   const status = [
@@ -91,7 +91,7 @@ export default function IncidentsPage() {
       setTiposIncidentes(results[0]);
       setOperationalConsequences(results[1]);
       if(results[2].length > 0){
-        setIndicents(results[2]);
+        setIncidents(results[2]);
       }
     });
   }
@@ -123,7 +123,8 @@ export default function IncidentsPage() {
       fetch("http://127.0.0.1:3000/incident")
         .then(checkResponseStatus)                 
         .then(parseJSON)
-        .then(incidentes => setIndicents(incidentes))
+        .then(incidentes => setIncidents(incidentes))
+        .then(setCheckedIndexes([]));
     }));
   }
 
@@ -277,7 +278,8 @@ export default function IncidentsPage() {
                           <Tasks
                             tasks={operationalConsequences}
                             onChange={onChangeOperationalConsequences}
-                            checkedIndexes = {checkedIndexes}
+                            checked = {checkedIndexes}
+                            setChecked={setCheckedIndexes}
                           />
                         </GridItem>}
                     </GridContainer>
@@ -305,7 +307,7 @@ export default function IncidentsPage() {
                       "incident_time": "Data", 
                       "comments": "Comentários",
                       }}
-                      content={indicents} 
+                      content={incidents} 
                       onDelete={onDeleteIncident}
                       onEdit={onEditIncident}
                       ></CustomTable>
