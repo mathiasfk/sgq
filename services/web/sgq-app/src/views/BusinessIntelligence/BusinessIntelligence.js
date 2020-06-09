@@ -6,21 +6,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
 import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
@@ -61,9 +52,9 @@ export default function BusinessIntelligence() {
 
   async function fetchData(){
     const urls = [
-      "http://127.0.0.1:3004/last_incident",
-      "http://127.0.0.1:3004/incidents_number",
-      "http://127.0.0.1:3004/incidents_per_month",
+      "http://127.0.0.1:3000/last_incident",
+      "http://127.0.0.1:3000/incidents_number",
+      "http://127.0.0.1:3000/incidents_per_month",
     ];
 
     Promise.all(urls.map(url =>

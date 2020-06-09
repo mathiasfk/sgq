@@ -14,7 +14,9 @@ import CustomTable from "components/CustomTable/CustomTable.js";
 import Button from "components/CustomButtons/Button.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
-import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js"
+import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
+import CustomSnackbar from "components/CustomSnackbar/CustomSnackbar.js";
+import status from "variables/incidents.js";
 
 const styles = {
   typo: {
@@ -55,6 +57,14 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function IncidentsPage() {
+  const [success, setSuccess] = React.useState(false);
+  const [failure, setFailure] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("");
+  const [failureMessage, setFailureMessage] = React.useState("");
+
+  const showFailure = msg => {setFailureMessage(msg); setFailure(true)}
+  const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)}
+
   const [tiposIncidentes, setTiposIncidentes] = useState([]);
   const [operationalConsequences, setOperationalConsequences] = useState([]);
   const [incidents, setIncidents] = useState(null);
@@ -100,14 +110,6 @@ export default function IncidentsPage() {
     setComments(value);
   }
 
-  const onChangeIncidentType = (value) => {
-    setSelectedTipoIncidente(value);
-  }
-
-  const onChangeStatus = (value) => {
-    setSelectedStatus(value);
-  }
-
   const onChangeOperationalConsequences = (value) => {
     setSelectedOperationalConsequences(value);
   }
@@ -116,7 +118,7 @@ export default function IncidentsPage() {
     return fetch(url, requestOpt)
     .then((response => {
       if(msgResponse.length > 0){
-        alert(msgResponse);
+        showSuccess(msgResponse);
       }
 
       //recarrega a lista de incidentes
@@ -127,6 +129,13 @@ export default function IncidentsPage() {
         .then(setCheckedIndexes([]));
     }));
   }
+
+  const limpaCampos = () =>{
+    setComments("");
+    setSelectedTipoIncidente(null);
+    setSelectedStatus(null);
+    setSelectedOperationalConsequences(null);
+  };
 
   const onEditIncident = (value) => {
     const incidenteTab = document.getElementsByClassName("MuiTab-wrapper")[0];
@@ -188,6 +197,7 @@ export default function IncidentsPage() {
     .then(() => {
       setIncidentTabName("Registrar incidente");
       setEditionMode(false);
+      limpaCampos();
     });
   }
 
@@ -208,7 +218,8 @@ export default function IncidentsPage() {
       })
     }; 
 
-    doIncidentFetch("http://127.0.0.1:3000/incident", requestOptions, "Incidente cadastrado com sucesso!");
+    doIncidentFetch("http://127.0.0.1:3000/incident", requestOptions, "Incidente cadastrado com sucesso!")
+    .then(() => limpaCampos());
   };
 
   useEffect(() => {
@@ -218,6 +229,8 @@ export default function IncidentsPage() {
   return (
     <GridContainer>
     <GridItem xs={12} sm={12} md={12}>
+      <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
+      <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setSuccess}/>
       <CustomTabs
           ref={tabsRef}
           headerColor="primary"
@@ -235,24 +248,24 @@ export default function IncidentsPage() {
                             <CustomSelect 
                               labelText="Tipo de incidente"
                               id="incident-type"
-                              onChange={onChangeIncidentType}
                               formControlProps={{
                                 fullWidth: true
                               }}
                               options={tiposIncidentes}
                               selectedValue={selectedTipoIncidente}
+                              setSelectedValue={setSelectedTipoIncidente}
                             />
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12}>
                             <CustomSelect 
                               labelText="Status"
                               id="incident-status"
-                              onChange={onChangeStatus}
                               formControlProps={{
                                 fullWidth: true
                               }}
                               options={status}
                               selectedValue={selectedStatus}
+                              setSelectedValue={setSelectedStatus}
                             />
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12}>

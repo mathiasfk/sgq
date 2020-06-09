@@ -20,15 +20,12 @@ export default function CustomSelect(props) {
       id,
       labelProps,
       options,
-      onChange,
       selectedValue,
+      setSelectedValue
     } = props;
 
-    const [state, setState] = React.useState(selectedValue);
-
     const handleChange = (event) => {
-        setState(event.target.value);
-        onChange(event.target.value);
+        setSelectedValue(event.target.value);
     };
   
     const marginTop = classNames({
@@ -52,7 +49,7 @@ export default function CustomSelect(props) {
           classes={{
             root: marginTop,
           }}
-          value={state}
+          value={selectedValue}
           onChange={handleChange}
           id={id}
         >
@@ -69,5 +66,6 @@ export default function CustomSelect(props) {
     labelProps: PropTypes.object,
     id: PropTypes.string,
     formControlProps: PropTypes.object,
-    options: PropTypes.array
+    options: PropTypes.array,
+    setSelectedValue: PropTypes.func,
   };

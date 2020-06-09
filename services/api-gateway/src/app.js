@@ -40,9 +40,10 @@ app.all('/divulgation*', (req, res, next) => {
 });
   
 // Incidents and Problems Module
-app.all('/incident*', (req, res, next) => {
+app.all('/*incident*', (req, res, next) => {
   incidentsProxy(req, res, next);
 });
+
 
 // Non-Conformities Module
 app.all('/non_conformity*', (req, res, next) => {
