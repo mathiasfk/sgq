@@ -1,7 +1,7 @@
 var status = [
-    {id: 0, name: "Pendente"}, 
-    {id: 1, name: "Em Andamento"},
-    {id: 2, name: "Finalizado"},
+    {id: "Pendente", name: "Pendente"}, 
+    {id: "Em Andamento", name: "Em Andamento"},
+    {id: "Finalizado", name: "Finalizado"},
 ];
 
 

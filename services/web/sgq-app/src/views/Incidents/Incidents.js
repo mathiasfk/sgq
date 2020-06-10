@@ -16,7 +16,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import Tasks from "components/Tasks/Tasks.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
 import CustomSnackbar from "components/CustomSnackbar/CustomSnackbar.js";
-import status from "variables/incidents.js";
+import {status} from "variables/incidents.js";
 
 const styles = {
   typo: {
@@ -69,16 +69,12 @@ export default function IncidentsPage() {
   const [operationalConsequences, setOperationalConsequences] = useState([]);
   const [incidents, setIncidents] = useState(null);
 
-  const [selectedTipoIncidente, setSelectedTipoIncidente] = useState();
-  const [selectedStatus, setSelectedStatus] = useState();
+  const [selectedTipoIncidente, setSelectedTipoIncidente] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
   const [checkedIndexes, setCheckedIndexes] = useState([]);
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState('');
   const [selectedOperationalConsequences, setSelectedOperationalConsequences] = useState([]);
-  const status = [
-    {id: "Pendente", name: "Pendente"}, 
-    {id: "Em Andamento", name: "Em Andamento"},
-    {id: "Finalizado", name: "Finalizado"},
-  ];
+
   const tabsRef = React.createRef();
   let [editionMode, setEditionMode] = useState(false);
   let [currentIncidentId, setCUrrentIncidentId] = useState(null);
@@ -277,7 +273,7 @@ export default function IncidentsPage() {
                             }}
                             inputProps={{
                               multiline: true,
-                              rows: 5
+                              rows: 3
                             }}
                             onChange={onChangeComments}
                             value={comments}
