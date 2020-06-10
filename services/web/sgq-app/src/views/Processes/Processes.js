@@ -136,7 +136,7 @@ function ChecklistWithHistoric(category){
           />
           <Button onClick={() => saveChecklist(category)}  color="primary">Enviar</Button>
           <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
-          <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setSuccess}/>
+          <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setFailure}/>
         </CardBody>
         </Card>
       );
