@@ -29,7 +29,7 @@ import CompliancePage from "views/Compliance/Compliance";
 const dashboardRoutes = [
   {
     path: "/bi",
-    name: "BusinessIntelligence",
+    name: "Business Intelligence",
     icon: Dashboard,
     component: BusinessIntelligencePage,
     layout: "/admin",

@@ -59,13 +59,13 @@ export default function BusinessIntelligence() {
 
     Promise.all(urls.map(url =>
       fetch(url)
-        .then(checkResponseStatus)                 
+        .then(checkResponseStatus)
         .then(parseJSON)
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
       let jsDateNow = new Date();
-      if(results && results[0].length > 0){
+      if(results && results[0] && results[0].length > 0){
         let dataUltimoIncidente = new Date(results[0][0].incident_time);
         let difDates = jsDateNow.getTime() - dataUltimoIncidente.getTime(); 
   
@@ -110,7 +110,7 @@ export default function BusinessIntelligence() {
             <CardFooter stats>
               <div className={classes.stats}>
                 <LocalOffer />
-                Ultima atualização {dateNow}
+                Última atualização {dateNow}
               </div>
             </CardFooter>
           </Card>
@@ -144,52 +144,11 @@ export default function BusinessIntelligence() {
             <CardFooter stats>
               <div className={classes.stats}>
                 <LocalOffer />
-                Ultima atualização {dateNow}
+                Última atualização {dateNow}
               </div>
             </CardFooter>
           </Card>
         </GridItem>
-       {/*<GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>content_copy</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
-              <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Get more space
-                </a>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
-              </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                Just Updated
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      */}
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
@@ -206,11 +165,11 @@ export default function BusinessIntelligence() {
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle}>Incidentes</h4>
-              <p className={classes.cardCategory}>Numero de incidentes registrados por mes</p>
+              <p className={classes.cardCategory}>Número de incidentes registrados por mês</p>
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> Ultima atualização {dateNow}
+                <AccessTime /> Última atualização {dateNow}
               </div>
             </CardFooter>
           </Card>
