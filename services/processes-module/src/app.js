@@ -41,17 +41,26 @@ app.delete('/checklist_item/:id', function(req, res) {
   db.execSQLQuery('DELETE FROM checklist_item WHERE id =' + req.params.id, res);
 });
 
-
 // checklist_answer
 // GET
 app.get('/checklist_answer', function(req, res) {
   let whereClause = req.query.category ? `WHERE category='${req.query.category}'`:'';
-  db.execSQLQuery(`SELECT * FROM checklist_answer ${whereClause};`, res);
+  db.execSQLQuery(`
+  SELECT a.id, category, username, answer_time, sum(answer) as checked_items,count(*) as total_items 
+  FROM processes_db.checklist_answer AS a
+  INNER JOIN processes_db.checklist_answer_item AS i
+  ON i.answer_id = a.id
+  ${whereClause}
+  GROUP BY a.id;
+  `, res);
 });
 // GET 
 app.get('/checklist_answer/:id', function(req, res) {
   db.execSQLQuery(`
-    SELECT item_id, answer FROM processes_db.checklist_answer_item
+    SELECT item_id, answer_id, answer, name
+    FROM processes_db.checklist_answer_item AS a
+    INNER JOIN processes_db.checklist_item AS i
+    ON a.item_id = i.id
     WHERE answer_id = ${req.params.id};
   `, res);
 });

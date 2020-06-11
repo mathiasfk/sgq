@@ -6,6 +6,10 @@ import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 import FormatPaintIcon from '@material-ui/icons/FormatPaint';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import WorkOffIcon from '@material-ui/icons/WorkOff';
+import Popover from '@material-ui/core/Popover';
+import { makeStyles } from '@material-ui/core/styles';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -22,6 +26,15 @@ import CustomSnackbar from "components/CustomSnackbar/CustomSnackbar.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
 import User from "utils/User.js";
 
+const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
+}));
+
 function ChecklistWithHistoric(category){
 
   const [tiposChecklist, setTiposChecklist] = useState([]);
@@ -32,9 +45,26 @@ function ChecklistWithHistoric(category){
   const [failure, setFailure] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState("");
   const [failureMessage, setFailureMessage] = React.useState("");
+  const [popoverContent, setPopoverContent] = React.useState("");
 
   const showFailure = msg => {setFailureMessage(msg); setFailure(true)}
   const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)}
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const classes = useStyles();
+
+  const handlePopoverOpen = (event, id) => {
+    setPopoverContent('loading...');
+    fetchAnswer(id);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   async function fetchChecklist(category){
     const urls = [
@@ -64,7 +94,28 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
-      setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time};}));
+      setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time, checked_items: <Details id={e.id} num={e.checked_items} />, total_items: e.total_items};}));
+    });
+  }
+
+  async function fetchAnswer(id){
+    const urls = [
+      `http://127.0.0.1:3000/checklist_answer/${id}`,
+    ];
+
+    Promise.all(urls.map(url =>
+      fetch(url)
+        .then(checkResponseStatus)
+        .then(parseJSON)
+        .catch(error => console.log('Alguma api teve problemas!', error))
+    )).
+    then(results => {
+      setPopoverContent(results[0].map(e => (
+      <GridContainer>
+      <GridItem>{e.answer ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }</GridItem>
+      <GridItem>{e.name}</GridItem>
+      </GridContainer>
+      )));
     });
   }
 
@@ -100,6 +151,13 @@ function ChecklistWithHistoric(category){
     fetchHistory(category);
   }, []);
 
+  function Details(props){
+    const { id, num } = props;
+    return (
+      <div onMouseEnter={(e) => handlePopoverOpen(e,id)} onMouseLeave={handlePopoverClose}>{num}</div>
+    )
+  }
+
   return (
         <Card>
           <CardBody>
@@ -128,6 +186,8 @@ function ChecklistWithHistoric(category){
                     "id": "ID",
                     "username": "Resposável",
                     "answer_time": "Horário",
+                    "checked_items": "Itens marcados",
+                    "total_items": "Total de itens"
                     }}
                     content={previousAnswers} onDelete={() => {showFailure("Não foi possível deletar!");}}></CustomTable>
                 )
@@ -135,6 +195,27 @@ function ChecklistWithHistoric(category){
             ]}
           />
           <Button onClick={() => saveChecklist(category)}  color="primary">Enviar</Button>
+          <Popover
+            id="mouse-over-popover"
+            className={classes.popover}
+            classes={{
+              paper: classes.paper,
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            {popoverContent}
+          </Popover>
           <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
           <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setFailure}/>
         </CardBody>
