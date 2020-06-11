@@ -17,6 +17,7 @@ import Tasks from "components/Tasks/Tasks.js";
 import {checkResponseStatus, parseJSON} from "utils/fetchUtils.js";
 import CustomSnackbar from "components/CustomSnackbar/CustomSnackbar.js";
 import {status} from "variables/incidents.js";
+import { object } from "prop-types";
 
 const styles = {
   typo: {
@@ -82,8 +83,7 @@ export default function IncidentsPage() {
 
   async function fetchData(){
     const urls = [
-      "http://127.0.0.1:3000/incident_type",
-      "http://127.0.0.1:3000/incident_conseq_type",
+      "http://127.0.0.1:3000/non_conformity",
       "http://127.0.0.1:3000/incident",
     ];
 
@@ -94,16 +94,29 @@ export default function IncidentsPage() {
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
-      setTiposIncidentes(results[0]);
-      setOperationalConsequences(results[1]);
-      if(results[2].length > 0){
-        setIncidents(results[2]);
+      let incidentes = [];
+      results[0].map(item => incidentes.push({id: item.id, name: item.non_conformity_name}))
+      setTiposIncidentes(incidentes);
+
+      if(results[1].length > 0){
+        setIncidents(results[1]);
       }
     });
   }
 
   const onChangeComments = (value) => {
     setComments(value);
+  }
+
+  const onChangeTipoIncidents = (value) => {
+    fetch("http://127.0.0.1:3000/non_conformity_consequences/" + value)
+        .then(checkResponseStatus)                 
+        .then(parseJSON)
+        .then(consequences => {
+          let lista = [];
+          consequences.map(item => lista.push({id: item.id, name: item.consequence_description}))
+          setOperationalConsequences(lista);
+        })
   }
 
   const onChangeOperationalConsequences = (value) => {
@@ -131,6 +144,7 @@ export default function IncidentsPage() {
     setSelectedTipoIncidente(null);
     setSelectedStatus(null);
     setSelectedOperationalConsequences(null);
+    setOperationalConsequences([]);
   };
 
   const onEditIncident = (value) => {
@@ -250,6 +264,7 @@ export default function IncidentsPage() {
                               options={tiposIncidentes}
                               selectedValue={selectedTipoIncidente}
                               setSelectedValue={setSelectedTipoIncidente}
+                              onChange={onChangeTipoIncidents}
                             />
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12}>
