@@ -21,11 +21,13 @@ export default function CustomSelect(props) {
       labelProps,
       options,
       selectedValue,
-      setSelectedValue
+      setSelectedValue,
+      onChange
     } = props;
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
+        if(onChange) onChange(event.target.value);
     };
   
     const marginTop = classNames({
