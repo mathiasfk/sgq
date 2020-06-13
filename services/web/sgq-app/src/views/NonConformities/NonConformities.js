@@ -57,13 +57,11 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function NonConformitiesPage() {
-  const [success, setSuccess] = React.useState(false);
-  const [failure, setFailure] = React.useState(false);
-  const [successMessage, setSuccessMessage] = React.useState("");
-  const [failureMessage, setFailureMessage] = React.useState("");
-
-  const showFailure = msg => {setFailureMessage(msg); setFailure(true)};
-  const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)};
+  const [snackBarInfo, setSnackBarInfo] = React.useState("");
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
+  const [snackBarMsg, setSnackBarMsg] = React.useState("");
+  const showSnackBar = (msg, info) => {setSnackBarInfo(info); setSnackBarMsg(msg); setOpenSnackBar(true)};
+  const hideSnackBar = () => {setOpenSnackBar(false);};
 
   const tabsRef = React.createRef();
   let [editionMode, setEditionMode] = useState(false);
@@ -104,11 +102,15 @@ export default function NonConformitiesPage() {
   }
 
   const doNonConformityFetch = (url, requestOpt, msgResponse) => {
+    showSnackBar("Loading...", "info");
     return fetch(url, requestOpt)
     .then((response => {
       if(msgResponse.length > 0){
-        showSuccess(msgResponse);
+        showSnackBar(msgResponse, "success");
+      }else{
+        hideSnackBar();
       }
+        
 
       //recarrega a lista de não conformidades
       fetch("http://127.0.0.1:3000/non_conformity")
@@ -150,11 +152,13 @@ export default function NonConformitiesPage() {
 
     //esconde painel de consequencias, pois não sera possivel edita-la
     setEditionMode(true);
-  
+    showSnackBar("Loading...", "info");
+
     fetch("http://127.0.0.1:3000/non_conformity_consequences/" + value[0], requestOptions)
     .then(checkResponseStatus)                 
     .then(parseJSON)
     .then((results) => {
+        hideSnackBar();
         setConsequenciasOperacionais(results.map(item => item.consequence_description).join("\n"));
     });
   }
@@ -235,8 +239,7 @@ export default function NonConformitiesPage() {
   return (
     <GridContainer>
     <GridItem xs={12} sm={12} md={12}>
-      <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
-      <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setSuccess}/>
+    <CustomSnackbar severity={snackBarInfo} message={snackBarMsg} open={openSnackBar} setOpen={setOpenSnackBar} /> 
       <CustomTabs
           ref={tabsRef}
           headerColor="primary"
@@ -273,14 +276,14 @@ export default function NonConformitiesPage() {
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12}>
                             <CustomInput
-                                labelText="Consequencias operacionais"
+                                labelText="Consequencias operacionais (separadas por linhas)"
                                 id="non-conformity-consequences"
                                 formControlProps={{
                                 fullWidth: true
                                 }}
                                 inputProps={{
                                 multiline: true,
-                                rows: 5
+                                rows: 3
                                 }}
                                 onChange={onChangeConsequenciasOperacionais}
                                 value={consequenciasOperacionais}

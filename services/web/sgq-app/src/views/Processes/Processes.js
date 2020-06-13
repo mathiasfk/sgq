@@ -41,15 +41,13 @@ function ChecklistWithHistoric(category){
   const [selectedChecklist, setSelectedChecklist] = useState([]);
   const [previousAnswers, setPreviousAnswers] = useState(null);
 
-  const [success, setSuccess] = React.useState(false);
-  const [failure, setFailure] = React.useState(false);
-  const [successMessage, setSuccessMessage] = React.useState("");
-  const [failureMessage, setFailureMessage] = React.useState("");
+  const [snackBarInfo, setSnackBarInfo] = React.useState("");
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
+  const [snackBarMsg, setSnackBarMsg] = React.useState("");
+  const showSnackBar = (msg, info) => {setSnackBarInfo(info); setSnackBarMsg(msg); setOpenSnackBar(true)};
+  const hideSnackBar = () => {setOpenSnackBar(false);};
+  
   const [popoverContent, setPopoverContent] = React.useState("");
-
-  const showFailure = msg => {setFailureMessage(msg); setFailure(true)}
-  const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)}
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const classes = useStyles();
@@ -86,7 +84,7 @@ function ChecklistWithHistoric(category){
     const urls = [
       `http://127.0.0.1:3000/checklist_answer?category=${category}`,
     ];
-    
+    showSnackBar("Loading...", "info");
     Promise.all(urls.map(url =>
       fetch(url)
         .then(checkResponseStatus)
@@ -94,6 +92,7 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
+      hideSnackBar();
       setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time, checked_items: <Details id={e.id} num={e.checked_items} />, total_items: e.total_items};}));
     });
   }
@@ -102,7 +101,7 @@ function ChecklistWithHistoric(category){
     const urls = [
       `http://127.0.0.1:3000/checklist_answer/${id}`,
     ];
-
+    showSnackBar("Loading...", "info");
     Promise.all(urls.map(url =>
       fetch(url)
         .then(checkResponseStatus)
@@ -116,6 +115,7 @@ function ChecklistWithHistoric(category){
       <GridItem>{e.name}</GridItem>
       </GridContainer>
       )));
+      hideSnackBar();
     });
   }
 
@@ -137,12 +137,12 @@ function ChecklistWithHistoric(category){
           checklist_answer: tiposChecklist.map(e => {return {id: e.id, answer: selectedChecklist.indexOf(e.id)>=0 };})
         })
     }; 
-
+    showSnackBar("Loading...", "info");
     fetch(`http://127.0.0.1:3000/checklist_answer?category=${category}&username=${User.getUsername()}`, requestOptions)
     .then((response => {
       fetchHistory(category);
       setSelectedChecklist([]);
-      showSuccess("Enviado com sucesso!");
+      showSnackBar("Enviado com sucesso!", "success");
     }));
   }
 
@@ -189,7 +189,7 @@ function ChecklistWithHistoric(category){
                     "checked_items": "Itens marcados",
                     "total_items": "Total de itens"
                     }}
-                    content={previousAnswers} onDelete={() => {showFailure("Não foi possível deletar!");}}></CustomTable>
+                    content={previousAnswers} onDelete={() => {showSnackBar("Não foi possível deletar!", "error");}}></CustomTable>
                 )
               }
             ]}
@@ -216,8 +216,7 @@ function ChecklistWithHistoric(category){
           >
             {popoverContent}
           </Popover>
-          <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
-          <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setFailure}/>
+          <CustomSnackbar severity={snackBarInfo} message={snackBarMsg} open={openSnackBar} setOpen={setOpenSnackBar} /> 
         </CardBody>
         </Card>
       );
