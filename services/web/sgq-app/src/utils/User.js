@@ -11,7 +11,7 @@ function getGroup(){
     let user;
     if(localStorage.getItem('user')){
         user = JSON.parse(localStorage.getItem('user')).username;
-        group = user == "lucas.gustavo" ? "operario" : "admin";
+        group = user == "jose.augusto" ? "operario" : "admin";
     }
     return group;
 }

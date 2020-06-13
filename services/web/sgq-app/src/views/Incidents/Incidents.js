@@ -58,13 +58,11 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 export default function IncidentsPage() {
-  const [success, setSuccess] = React.useState(false);
-  const [failure, setFailure] = React.useState(false);
-  const [successMessage, setSuccessMessage] = React.useState("");
-  const [failureMessage, setFailureMessage] = React.useState("");
-
-  const showFailure = msg => {setFailureMessage(msg); setFailure(true)}
-  const showSuccess = msg => {setSuccessMessage(msg); setSuccess(true)}
+  const [snackBarInfo, setSnackBarInfo] = React.useState("");
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
+  const [snackBarMsg, setSnackBarMsg] = React.useState("");
+  const showSnackBar = (msg, info) => {setSnackBarInfo(info); setSnackBarMsg(msg); setOpenSnackBar(true)};
+  const hideSnackBar = () => {setOpenSnackBar(false);};
 
   const [tiposIncidentes, setTiposIncidentes] = useState([]);
   const [operationalConsequences, setOperationalConsequences] = useState([]);
@@ -82,6 +80,7 @@ export default function IncidentsPage() {
   let [incidentTabName, setIncidentTabName] = useState("Registrar Incidente");
 
   async function fetchData(){
+    showSnackBar("Loading...", "info");
     const urls = [
       "http://127.0.0.1:3000/non_conformity",
       "http://127.0.0.1:3000/incident",
@@ -94,6 +93,7 @@ export default function IncidentsPage() {
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
+      hideSnackBar();
       let incidentes = [];
       results[0].map(item => incidentes.push({id: item.id, name: item.non_conformity_name}))
       setTiposIncidentes(incidentes);
@@ -109,10 +109,12 @@ export default function IncidentsPage() {
   }
 
   const onChangeTipoIncidents = (value) => {
+    showSnackBar("Loading...", "info");
     fetch("http://127.0.0.1:3000/non_conformity_consequences/" + value)
         .then(checkResponseStatus)                 
         .then(parseJSON)
         .then(consequences => {
+          hideSnackBar();
           let lista = [];
           consequences.map(item => lista.push({id: item.id, name: item.consequence_description}))
           setOperationalConsequences(lista);
@@ -124,10 +126,11 @@ export default function IncidentsPage() {
   }
 
   const doIncidentFetch = (url, requestOpt, msgResponse) => {
+    showSnackBar("Loading...", "info");
     return fetch(url, requestOpt)
     .then((response => {
       if(msgResponse.length > 0){
-        showSuccess(msgResponse);
+        showSnackBar(msgResponse, "success");
       }
 
       //recarrega a lista de incidentes
@@ -201,6 +204,7 @@ export default function IncidentsPage() {
       })
     }; 
 
+    showSnackBar("Loading...", "info");
     doIncidentFetch("http://127.0.0.1:3000/incident/" + currentIncidentId, 
     requestOptions, 
     "Incidente atualizado com sucesso!")
@@ -227,7 +231,7 @@ export default function IncidentsPage() {
         status: selectedStatus,
       })
     }; 
-
+    showSnackBar("Loading...", "info");
     doIncidentFetch("http://127.0.0.1:3000/incident", requestOptions, "Incidente cadastrado com sucesso!")
     .then(() => limpaCampos());
   };
@@ -239,8 +243,7 @@ export default function IncidentsPage() {
   return (
     <GridContainer>
     <GridItem xs={12} sm={12} md={12}>
-      <CustomSnackbar severity="success" message={successMessage} open={success} setOpen={setSuccess} />
-      <CustomSnackbar severity="error" message={failureMessage} open={failure} setOpen={setSuccess}/>
+    <CustomSnackbar severity={snackBarInfo} message={snackBarMsg} open={openSnackBar} setOpen={setOpenSnackBar} /> 
       <CustomTabs
           ref={tabsRef}
           headerColor="primary"
