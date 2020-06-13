@@ -16,13 +16,13 @@ app.use(function(req, res, next) {
 });
 
 // Proxy configurations
-const authProxy = httpProxy('http://auth-service:4000');
-const biProxy = httpProxy('http://bi-module:3001');
-const complianceProxy = httpProxy('http://compliance-module:3002');
-const divulgationProxy = httpProxy('http://divulgation-module:3003');
-const incidentsProxy = httpProxy('http://incidents-module:3004');
-const nonConformitiesProxy = httpProxy('http://non-conformities-module:3005');
-const processesProxy = httpProxy('http://processes-module:3006');
+const authProxy = httpProxy('http://auth-service.sgq:4000');
+const biProxy = httpProxy('http://bi-module.sgq:3001');
+const complianceProxy = httpProxy('http://compliance-module.sgq:3002');
+const divulgationProxy = httpProxy('http://divulgation-module.sgq:3003');
+const incidentsProxy = httpProxy('http://incidents-module.sgq:3004');
+const nonConformitiesProxy = httpProxy('http://non-conformities-module.sgq:3005');
+const processesProxy = httpProxy('http://processes-module.sgq:3006');
 
 
 // Authentication

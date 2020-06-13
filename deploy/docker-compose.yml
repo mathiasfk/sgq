@@ -1,119 +1,123 @@
-version: "3.6"
+version: "3"
 
 services:
 
   web-service:
-    container_name: web-service.sgq
-    image: mathiasfk/sgq-web-service:1.0.0-DEV
-    build: ./services/web/sgq-app/
+    image: mathiasfk/sgq-web-service:1.0.0
+    build: 
+      context: ../services/web/sgq-app/
+      dockerfile: Dockerfile-prod
     volumes:
-      - ./services/web/sgq-app/:/usr/src/app # Bindind files for quick development
       - web-node-modules:/usr/src/app/node_modules
     ports:
       - '80:80' # expose ports - HOST:CONTAINER
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=80
-    depends_on:
-      - api-gateway
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: web
 
   api-gateway:
-    container_name: api-gateway.sgq
     image: mathiasfk/sgq-api-gateway:1.0.0
-    build: ./services/api-gateway/
-    restart: unless-stopped
+    build: ../services/api-gateway/
     ports:
       - 3000:3000 # host:container
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: api-gateway
 
   auth-service:
-    container_name: auth-service.sgq
     image: mathiasfk/sgq-auth-service:1.0.0
-    build: ./services/auth-service/
-    restart: unless-stopped
+    build: ../services/auth-service/
     ports:
       - 4000:4000
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: auth
 
   bi-module:
-    container_name: bi-module.sgq
     image: mathiasfk/sgq-bi-module:1.0.0
-    build: ./services/bi-module/
-    restart: unless-stopped
+    build: ../services/bi-module/
     ports:
       - 3001:3001 # host:container
     networks:
       - microservices
-
-  compliance-module:
-    container_name: compliance-module.sgq
-    image: mathiasfk/sgq-compliance-module:1.0.0
-    build: ./services/compliance-module/
-    restart: unless-stopped
-    ports:
-      - 3002:3002 # host:container
-    networks:
-      - microservices
-
-  divulgation-module:
-    container_name: divulgation-module.sgq
-    image: mathiasfk/sgq-divulgation-module:1.0.0
-    build: ./services/divulgation-module/
-    restart: unless-stopped
-    ports:
-      - 3003:3003 # host:container
-    networks:
-      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: bi
 
   incidents-module:
-    container_name: incidents-module.sgq
     image: mathiasfk/incidents-module:1.0.0
-    build: ./services/incidents-module/
-    restart: unless-stopped
+    build: ../services/incidents-module/
     ports:
       - 3004:3004 # host:container
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: incidents
 
   non-conformities-module:
-    container_name: non-conformities-module.sgq
     image: mathiasfk/sgq-non-conformities-module:1.0.0
-    build: ./services/non-conformities-module/
-    restart: unless-stopped
+    build: ../services/non-conformities-module/
     ports:
       - 3005:3005 # host:container
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: non-conformities
 
   processes-module:
-    container_name: processes-module.sgq
     image: mathiasfk/sgq-processes-module:1.0.0
-    build: ./services/processes-module/
-    restart: unless-stopped
+    build: ../services/processes-module/
     ports:
       - 3006:3006 # host:container
     networks:
       - microservices
 
   mongo:
-    container_name: users-db.sgq
     image: mongo:3.6.18
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: mongorootpassword
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: mongo
 
   incidents-db:
-    container_name: incidents-db.sgq
     image: mathiasfk/sgq-incidents-db:1.0.0
-    build: ./services/incidents-module/db/
-    restart: always
+    build: ../services/incidents-module/db/
     command: --init-file /data/application/init_db.sql
     environment:
       MYSQL_DATABASE: 'incidents_db'
@@ -122,15 +126,18 @@ services:
       MYSQL_ROOT_PASSWORD: 'not_123456'
     volumes:
       - incidents-db:/var/lib/mysql
-      - ./services/incidents-module/db/init_db.sql:/data/application/init_db.sql
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: incidents-db
 
   non-conformities-db:
-    container_name: non-conformities-db.sgq
     image: mathiasfk/sgq-non-conformities-db:1.0.0
-    build: ./services/non-conformities-module/db/
-    restart: always
+    build: ../services/non-conformities-module/db/
     command: --init-file /data/application/init_db.sql
     environment:
       MYSQL_DATABASE: 'non_conformities_db'
@@ -141,12 +148,16 @@ services:
       - non-conformities-db:/var/lib/mysql
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: non-conformities-db
 
   processes-db:
-    container_name: processes-db.sgq
     image: mathiasfk/sgq-processes-db:1.0.0
-    build: ./services/processes-module/db/
-    restart: always
+    build: ../services/processes-module/db/
     command: --init-file /data/application/init_db.sql
     environment:
       MYSQL_DATABASE: 'non_conformities_db'
@@ -157,6 +168,12 @@ services:
       - processes-db:/var/lib/mysql
     networks:
       - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: processes-db
 
 networks:
     microservices:

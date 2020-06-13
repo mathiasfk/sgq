@@ -21,7 +21,7 @@ docker-compose up
 
 Isso irá subir todos os serviços, inclusive o web.
 
-- Web: http://localhost:9000
+- Web: http://localhost:80
 - API: http://localhost:3000
 - Autenticação: http://localhost:4000
 
@@ -55,6 +55,12 @@ Para testar a aplicação react sem subir o docker-compose:
 npm install
 npm start
 ```
+
+## Deploy na nuvem
+
+O sistema está provisionado no link http://54.188.193.120/
+
+O processo de deploy na numem está detalhado [aqui](deploy/how-to).
 
 ## Créditos
 

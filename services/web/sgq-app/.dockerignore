@@ -1,0 +1,6 @@
+.github
+.github/*
+node_modules
+node_modules/*
+Dockerfile
+Dockerfile*

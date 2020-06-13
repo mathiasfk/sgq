@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+
+  non-conformities-module:
+    image: mathiasfk/sgq-non-conformities-module:1.0.0
+    build: ../services/non-conformities-module/
+    ports:
+      - 3005:3005 # host:container
+    networks:
+      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: non-conformities
+
+  non-conformities-db:
+    image: mathiasfk/sgq-non-conformities-db:1.0.0
+    build: ../services/non-conformities-module/db/
+    command: --init-file /data/application/init_db.sql
+    environment:
+      MYSQL_DATABASE: 'non_conformities_db'
+      MYSQL_USER: 'sgq'
+      MYSQL_PASSWORD: 'sgq'
+      MYSQL_ROOT_PASSWORD: 'not_123456'
+    volumes:
+      - non-conformities-db:/var/lib/mysql
+    networks:
+      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: non-conformities-db
+
+networks:
+    microservices:
+
+volumes:
+  incidents-db:
+  non-conformities-db:
+  processes-db:
+  web-node-modules:

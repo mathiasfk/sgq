@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+
+  incidents-module:
+    image: mathiasfk/incidents-module:1.0.0
+    build: ../services/incidents-module/
+    ports:
+      - 3004:3004 # host:container
+    networks:
+      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: incidents
+
+  incidents-db:
+    image: mathiasfk/sgq-incidents-db:1.0.0
+    build: ../services/incidents-module/db/
+    command: --init-file /data/application/init_db.sql
+    environment:
+      MYSQL_DATABASE: 'incidents_db'
+      MYSQL_USER: 'sgq'
+      MYSQL_PASSWORD: 'sgq'
+      MYSQL_ROOT_PASSWORD: 'not_123456'
+    volumes:
+      - incidents-db:/var/lib/mysql
+    networks:
+      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: incidents-db
+
+networks:
+    microservices:
+
+volumes:
+  incidents-db:
+  non-conformities-db:
+  processes-db:
+  web-node-modules:
