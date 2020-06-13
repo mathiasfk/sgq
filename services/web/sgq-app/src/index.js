@@ -28,10 +28,6 @@ import { history } from './_helpers';
 import { store } from './_helpers';
 import { PrivateRoute } from './_components';
 
-// setup fake backend
-import { configureFakeBackend } from './_helpers';
-configureFakeBackend();
-
 
 ReactDOM.render(
   <Provider store={store}>
