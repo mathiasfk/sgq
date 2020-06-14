@@ -16,7 +16,7 @@ services:
         awslogs-region: us-west-2
         awslogs-stream-prefix: auth
 
-  mongo:
+  users-db:
     image: mongo:3.6.18
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -28,7 +28,7 @@ services:
       options: 
         awslogs-group: sgq
         awslogs-region: us-west-2
-        awslogs-stream-prefix: mongo
+        awslogs-stream-prefix: users-db
 
 networks:
     microservices:

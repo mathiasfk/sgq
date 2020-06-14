@@ -14,6 +14,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=80
+      - REACT_APP_API_URL=http://localhost:3000
     depends_on:
       - api-gateway
     networks:
@@ -99,8 +100,8 @@ services:
     networks:
       - microservices
 
-  mongo:
-    container_name: users-db.sgq
+  users-db:
+    container_name: users-db
     image: mongo:3.6.18
     restart: always
     environment:
@@ -110,7 +111,7 @@ services:
       - microservices
 
   incidents-db:
-    container_name: incidents-db.sgq
+    container_name: incidents-db
     image: mathiasfk/sgq-incidents-db:1.0.0
     build: ./services/incidents-module/db/
     restart: always
@@ -127,7 +128,7 @@ services:
       - microservices
 
   non-conformities-db:
-    container_name: non-conformities-db.sgq
+    container_name: non-conformities-db
     image: mathiasfk/sgq-non-conformities-db:1.0.0
     build: ./services/non-conformities-module/db/
     restart: always
@@ -143,13 +144,13 @@ services:
       - microservices
 
   processes-db:
-    container_name: processes-db.sgq
+    container_name: processes-db
     image: mathiasfk/sgq-processes-db:1.0.0
     build: ./services/processes-module/db/
     restart: always
     command: --init-file /data/application/init_db.sql
     environment:
-      MYSQL_DATABASE: 'non_conformities_db'
+      MYSQL_DATABASE: 'processes_db'
       MYSQL_USER: 'sgq'
       MYSQL_PASSWORD: 'sgq'
       MYSQL_ROOT_PASSWORD: 'not_123456'

@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+
+  api-gateway:
+    image: mathiasfk/sgq-api-gateway:1.0.0
+    build: ../services/api-gateway/
+    ports:
+      - 80:80 # host:container
+    environment:
+      - PORT=80
+      - DEBUG=express:*
+    networks:
+      - microservices
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: sgq
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: api-gateway
+
+networks:
+    microservices:
+
+volumes:
+  incidents-db:
+  non-conformities-db:
+  processes-db:
+  web-node-modules:

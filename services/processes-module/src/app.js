@@ -3,14 +3,11 @@ var app = express();
 
 
 const db = require('./db');
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
+const cors = require('cors');
+app.use(cors()); // cross origin resource sharing
 app.use(express.json());
+app.options('*', cors()); // include before other routes
+
 
 app.get('/', function(req, res) {
   res.send('Olá do módulo de processos automotivos!');

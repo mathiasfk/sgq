@@ -22,8 +22,8 @@ services:
     command: --init-file /data/application/init_db.sql
     environment:
       MYSQL_DATABASE: 'incidents_db'
-      MYSQL_USER: 'sgq'
-      MYSQL_PASSWORD: 'sgq'
+      #MYSQL_USER: 'sgq'
+      #MYSQL_PASSWORD: 'super-secure-password'
       MYSQL_ROOT_PASSWORD: 'not_123456'
     volumes:
       - incidents-db:/var/lib/mysql

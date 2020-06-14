@@ -3,17 +3,14 @@ const express = require('express');
 const httpProxy = require('express-http-proxy');
 const helmet = require('helmet');
 const logger = require('morgan');
+const cors = require('cors');
 
 const app = express();
+app.use(cors()); // cross origin resource sharing
 app.use(logger('dev')); // log HTTP requests
 app.use(helmet()); // some security
+app.options('*', cors()); // include before other routes
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 // Proxy configurations
 const authProxy = httpProxy('http://auth-service.sgq:4000');
@@ -66,7 +63,9 @@ app.get('/', function(req, res) {
   res.send('Olá do API Gateway!');
 });
 
+
 // Start server
-app.listen(3000, function() {
-  console.log('API Gateway escutando na porta 3000!');
+const port = process.env.PORT || 3000;
+app.listen(port, function() {
+  console.log(`API Gateway escutando na porta ${port}!`);
 });

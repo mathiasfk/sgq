@@ -22,8 +22,6 @@ services:
     command: --init-file /data/application/init_db.sql
     environment:
       MYSQL_DATABASE: 'non_conformities_db'
-      MYSQL_USER: 'sgq'
-      MYSQL_PASSWORD: 'sgq'
       MYSQL_ROOT_PASSWORD: 'not_123456'
     volumes:
       - non-conformities-db:/var/lib/mysql

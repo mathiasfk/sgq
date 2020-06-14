@@ -51,20 +51,6 @@ services:
         awslogs-region: us-west-2
         awslogs-stream-prefix: auth
 
-  bi-module:
-    image: mathiasfk/sgq-bi-module:1.0.0
-    build: ../services/bi-module/
-    ports:
-      - 3001:3001 # host:container
-    networks:
-      - microservices
-    logging:
-      driver: awslogs
-      options: 
-        awslogs-group: sgq
-        awslogs-region: us-west-2
-        awslogs-stream-prefix: bi
-
   incidents-module:
     image: mathiasfk/incidents-module:1.0.0
     build: ../services/incidents-module/
@@ -101,7 +87,7 @@ services:
     networks:
       - microservices
 
-  mongo:
+  users-db:
     image: mongo:3.6.18
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -113,7 +99,7 @@ services:
       options: 
         awslogs-group: sgq
         awslogs-region: us-west-2
-        awslogs-stream-prefix: mongo
+        awslogs-stream-prefix: users-db
 
   incidents-db:
     image: mathiasfk/sgq-incidents-db:1.0.0

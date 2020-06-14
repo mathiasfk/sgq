@@ -2,7 +2,7 @@ const mysql      = require('mysql');
 
 function initConnection(multipleStatements = false){
   return mysql.createConnection({
-    host     : 'incidents-db',
+    host     : 'localhost',
     port     : 3306,
     user     : 'sgq',
     password : 'super-secure-password',

@@ -1,4 +1,4 @@
 ﻿{
-    "connectionString": "mongodb://root:mongorootpassword@users-db:27017",
+    "connectionString": "mongodb://root:mongorootpassword@localhost:27017",
     "secret": "secret SGQ string to generate JWT tokens"
 }
