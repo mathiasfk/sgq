@@ -6,6 +6,8 @@ export default function CustomTable(props) {
     const {
         content,
         columns,
+        onDelete,
+        onEdit,
       } = props;
 
     var translate = (from, dic) => {
@@ -15,14 +17,16 @@ export default function CustomTable(props) {
     };
 
     var columnDic = columns || {};
-    var head = content ? Object.keys(content[0]).map(col => translate(col,columnDic)) : [];
-    var data = content ? content.map(item => Object.values(item)) : [];
+    var head = (content && content.length > 0) ? Object.keys(content[0]).map(col => translate(col,columnDic)) : [];
+    var data = (content && content.length > 0) ? content.map(item => Object.values(item)) : [];
 
     return (
         <Table
             tableHeaderColor="primary"
             tableHead={head}
             tableData={data}
+            onDelete={onDelete}
+            onEdit={onEdit}
         />
     );
 }

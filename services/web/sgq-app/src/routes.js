@@ -19,30 +19,29 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // core components/views for Admin layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
+import BusinessIntelligencePage from "views/BusinessIntelligence/BusinessIntelligence.js";
 import ProcessesPage from "views/Processes/Processes.js";
 import IncidentsPage from "views/Incidents/Incidents";
 import NonConformitiesPage from "views/NonConformities/NonConformities";
 import DivulgationPage from "views/Divulgation/Divulgation";
-import BusinessIntelligencePage from "views/BusinessIntelligence/BusinessIntelligence";
 import CompliancePage from "views/Compliance/Compliance";
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: "/bi",
+    name: "Business Intelligence",
     icon: Dashboard,
-    component: DashboardPage,
+    component: BusinessIntelligencePage,
     layout: "/admin",
     group: "all",
   },
   {
-    path: "/table",
-    name: "Processos Automotivos",    
-    icon: "content_paste",
-    component: ProcessesPage,
+    path: "/non-conformities",
+    name: "Não Conformidades",    
+    icon: LibraryBooks,
+    component: NonConformitiesPage,
     layout: "/admin",
-    group: "all",
+    group: "admin",
   },
   {
     path: "/incidents",
@@ -53,10 +52,10 @@ const dashboardRoutes = [
     group: "all",
   },
   {
-    path: "/non-conformities",
-    name: "Não Conformidades",    
-    icon: LibraryBooks,
-    component: NonConformitiesPage,
+    path: "/processes",
+    name: "Processos Automotivos",    
+    icon: "content_paste",
+    component: ProcessesPage,
     layout: "/admin",
     group: "all",
   },
@@ -67,14 +66,6 @@ const dashboardRoutes = [
     component: DivulgationPage,
     layout: "/admin",
     group: "all",
-  },
-  {
-    path: "/bi",
-    name: "Business Intelligence",    
-    icon: LibraryBooks,
-    component: BusinessIntelligencePage,
-    layout: "/admin",
-    group: "admin",
   },
   {
     path: "/compliance",

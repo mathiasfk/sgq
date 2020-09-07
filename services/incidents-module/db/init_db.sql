@@ -1,4 +1,4 @@
--- DROP DATABASE IF EXISTS incidents_db;
+DROP DATABASE IF EXISTS incidents_db;
 CREATE DATABASE IF NOT EXISTS incidents_db;
 USE incidents_db;
 
@@ -6,7 +6,6 @@ CREATE USER IF NOT EXISTS 'sgq'@'%' IDENTIFIED WITH mysql_native_password BY 'su
 GRANT USAGE, SELECT, INSERT, UPDATE, DELETE ON *.* TO 'sgq'@'%';
 FLUSH PRIVILEGES;
 
-drop table if exists incident_type;
 CREATE TABLE IF NOT EXISTS incident_type (
     id INT NOT NULL AUTO_INCREMENT, 
     name VARCHAR(255),
@@ -17,6 +16,7 @@ CREATE TABLE IF NOT EXISTS incident (
     id INT NOT NULL AUTO_INCREMENT, 
     incident_type INT,
     incident_time TIMESTAMP,
+    `status` ENUM("Pendente", "Em Andamento", "Finalizado"), 
     comments VARCHAR(255),
     PRIMARY KEY (id),
     CONSTRAINT FOREIGN KEY (incident_type)
@@ -24,13 +24,13 @@ CREATE TABLE IF NOT EXISTS incident (
         ON DELETE CASCADE
 );
 
-drop table if exists incident_conseq_type;
 CREATE TABLE IF NOT EXISTS incident_conseq_type (
     id INT NOT NULL AUTO_INCREMENT, 
     `name` VARCHAR(255),
     PRIMARY KEY (id)
 );
 
+/* Armazena as consequencias operacionais selecionada para um incidente */
 CREATE TABLE IF NOT EXISTS incident_conseq (
     id INT NOT NULL AUTO_INCREMENT, 
     incident_id INT,

@@ -10,6 +10,7 @@ Para rodar é necessário:
 Sistemas operacionais validados:
 
 * Windows 10
+* Ubuntu
 
 ## Subindo o ambiente
 
@@ -22,6 +23,7 @@ Isso irá subir todos os serviços, inclusive o web.
 
 - Web: http://localhost:9000
 - API: http://localhost:3000
+- Autenticação: http://localhost:4000
 
 ## Testando os microsserviços
 
@@ -53,3 +55,28 @@ Para testar a aplicação react sem subir o docker-compose:
 npm install
 npm start
 ```
+
+## Créditos
+
+Foram utilizados trechos dos repositórios listados abaixo.
+
+Repositório: https://github.com/mjhea0/microservice-movies \
+Copyright: 2018, Michael Herman \
+Licença: MIT
+
+Repositório: https://github.com/cornflourblue/node-mongo-registration-login-api \
+Copyright: 2018, Jason Watmore \
+Licença: MIT
+
+Repositório: https://github.com/cornflourblue/react-redux-registration-login-example \
+Copyright: 2017, Jason Watmore \
+Licença: MIT
+
+Repositório: https://github.com/creativetimofficial/material-dashboard-react \
+Copyright: 2020, Creative Tim \
+Licença: MIT
+
+
+## Licença
+
+[LICENSE](LICENSE.md)

@@ -6,6 +6,7 @@ const db = require('./db');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -44,7 +45,7 @@ app.delete('/incident_type/:id', function(req, res) {
 // incident
 // GET
 app.get('/incident', function(req, res) {
-  db.execSQLQuery('SELECT id, incident_type, incident_time, comments FROM incident;', res);
+  db.execSQLQuery('SELECT * FROM incident;', res);
 });
 // GET 
 app.get('/incident/:id', function(req, res) {
@@ -52,7 +53,7 @@ app.get('/incident/:id', function(req, res) {
 });
 // POST 
 app.post('/incident', function(req, res) {
-  let insertIncident = 'INSERT INTO incident (id, incident_type, incident_time, comments) VALUES (NULL, ' + req.body.type + ',NOW(),"' + req.body.comments + '");'
+  let insertIncident = 'INSERT INTO incident (id, incident_type, incident_time, comments, `status`) VALUES (NULL, ' + req.body.type + ',NOW(),"' + req.body.comments + '","' + req.body.status + '");'
   let insertsItems = ``
   req.body.consequence_type.forEach(item => {
     console.log(item);
@@ -69,7 +70,9 @@ app.post('/incident', function(req, res) {
 });
 // PUT
 app.put('/incident/:id', function(req, res) {
-  res.status(501).send('not implemented');
+  db.execSQLQuery('UPDATE incident SET incident_type = "' + req.body.type + '", ' +
+  'comments = "' + req.body.comments + '",' +
+  '`status` = "' + req.body.status + '" WHERE id =' + req.params.id, res);
 });
 // DELETE
 app.delete('/incident/:id', function(req, res) {
@@ -117,7 +120,21 @@ app.put('/incident_conseq/:id', function(req, res) {
 });
 // DELETE
 app.delete('/incident_conseq/:id', function(req, res) {
-  db.execSQLQuery('DELETE FROM incident_conseq WHERE id =' + req.params.id, res);
+  db.execSQLQuery('DELETE FROM incident_conseq WHERE incident_id =' + req.params.id, res);
+});
+
+//Get the last incident
+app.get('/last_incident', function(req, res) {
+  db.execSQLQuery('SELECT * FROM incident ORDER BY incident_time DESC limit 1', res);
+});
+
+//Get the number of open incidents
+app.get('/incidents_number', function(req, res) {
+  db.execSQLQuery('SELECT COUNT(*) as total FROM incident WHERE `status` <> "Finalizado";', res);
+});
+
+app.get('/incidents_per_month', function(req, res) {
+  db.execSQLQuery('SELECT COUNT(*) as total, MONTH(incident_time) as mes FROM incident WHERE YEAR(incident_time) = YEAR(NOW()) GROUP BY MONTH(incident_time);', res);
 });
 
 // Start server

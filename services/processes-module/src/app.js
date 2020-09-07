@@ -21,19 +21,16 @@ app.get('/', function(req, res) {
 // checklist_item
 // GET
 app.get('/checklist_item', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item;', res);
+  let whereClause = req.query.category ? `WHERE category='${req.query.category}'`:'';
+  db.execSQLQuery(`SELECT * FROM checklist_item ${whereClause};`, res);
 });
 // GET
 app.get('/checklist_item/:id', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item WHERE id =' + req.params.id, res);
-});
-// GET
-app.get('/checklist_item/:id', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_item WHERE id =' + req.params.id, res);
+  db.execSQLQuery(`SELECT * FROM checklist_item WHERE id=${req.params.id};`, res);
 });
 // POST
 app.post('/checklist_item', function(req, res) {
-  db.execSQLQuery('INSERT INTO checklist_item (id, item_name) VALUES (NULL, "' + req.query.name + '");', res);
+  db.execSQLQuery(`INSERT INTO checklist_item (id, category, name) VALUES (NULL, '${req.query.category}', '${req.query.name}');`, res);
 });
 // PUT
 app.put('/checklist_item/:id', function(req, res) {
@@ -44,31 +41,40 @@ app.delete('/checklist_item/:id', function(req, res) {
   db.execSQLQuery('DELETE FROM checklist_item WHERE id =' + req.params.id, res);
 });
 
-
 // checklist_answer
 // GET
 app.get('/checklist_answer', function(req, res) {
-  db.execSQLQuery('SELECT * FROM checklist_answer;', res);
+  let whereClause = req.query.category ? `WHERE category='${req.query.category}'`:'';
+  db.execSQLQuery(`
+  SELECT a.id, category, username, answer_time, sum(answer) as checked_items,count(*) as total_items 
+  FROM processes_db.checklist_answer AS a
+  INNER JOIN processes_db.checklist_answer_item AS i
+  ON i.answer_id = a.id
+  ${whereClause}
+  GROUP BY a.id;
+  `, res);
 });
 // GET 
 app.get('/checklist_answer/:id', function(req, res) {
   db.execSQLQuery(`
-    SELECT item_id, answer FROM processes_db.checklist_answer_item
+    SELECT item_id, answer_id, answer, name
+    FROM processes_db.checklist_answer_item AS a
+    INNER JOIN processes_db.checklist_item AS i
+    ON a.item_id = i.id
     WHERE answer_id = ${req.params.id};
   `, res);
 });
 // POST 
 app.post('/checklist_answer', function(req, res) {
-  let insertsAnswer = 'INSERT INTO processes_db.checklist_answer (id, answer_time) VALUES (NULL, now());'
-  let insertsAnswerItem = ''
-  req.body.type.forEach(item => {
+  let insertsAnswerItem = '';
+  req.body.checklist_answer.forEach(item => {
     insertsAnswerItem += 
-    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item},TRUE);
+    `INSERT INTO processes_db.checklist_answer_item (id, answer_id, item_id, answer) VALUES (NULL,@answer_id,${item.id},${item.answer});
     `;
   });
-
+  //TODO: verificar se o usuário está autenticado
   db.execMultipleStatements(`
-  ${insertsAnswer}
+  INSERT INTO processes_db.checklist_answer (id, category, username, answer_time) VALUES (NULL, '${req.query.category}', '${req.query.username}', now());
   SET @answer_id = LAST_INSERT_ID();
   ${insertsAnswerItem}
   `, res);
