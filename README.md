@@ -21,7 +21,7 @@ docker-compose up
 
 Isso irá subir todos os serviços, inclusive o web.
 
-- Web: http://localhost:9000
+- Web: http://localhost:80
 - API: http://localhost:3000
 - Autenticação: http://localhost:4000
 

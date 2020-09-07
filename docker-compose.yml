@@ -9,9 +9,11 @@ services:
       - ./services/web/sgq-app/:/usr/src/app
       - web-node-modules:/usr/src/app/node_modules
     ports:
-      - '9000:3000' # expose ports - HOST:CONTAINER
+      - '80:80' # expose ports - HOST:CONTAINER
     environment:
       - NODE_ENV=${NODE_ENV}
+      - PORT=80
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
     depends_on:
       - api-gateway
     networks:

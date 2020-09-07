@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import config from 'react-global-configuration';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -75,7 +76,7 @@ export default function NonConformitiesPage() {
 
   async function fetchData(){
     const urls = [
-        "http://127.0.0.1:3000/non_conformity",
+      `${config.get('apiUrl')}/non_conformity`,
     ];
 
     Promise.all(urls.map(url =>
@@ -113,7 +114,7 @@ export default function NonConformitiesPage() {
         
 
       //recarrega a lista de não conformidades
-      fetch("http://127.0.0.1:3000/non_conformity")
+      fetch(`${config.get('apiUrl')}/non_conformity`)
         .then(checkResponseStatus)                 
         .then(parseJSON)
         .then(non_conformities => setNonConformities(non_conformities));
@@ -154,7 +155,7 @@ export default function NonConformitiesPage() {
     setEditionMode(true);
     showSnackBar("Loading...", "info");
 
-    fetch("http://127.0.0.1:3000/non_conformity_consequences/" + value[0], requestOptions)
+    fetch(`${config.get('apiUrl')}/non_conformity_consequences/${value[0]}`, requestOptions)
     .then(checkResponseStatus)                 
     .then(parseJSON)
     .then((results) => {
@@ -175,8 +176,8 @@ export default function NonConformitiesPage() {
       },
     }; 
 
-    fetch("http://127.0.0.1:3000/non_conformity_consequences/" + nonConformityId, requestOptions);
-    doNonConformityFetch("http://127.0.0.1:3000/non_conformity/" + nonConformityId, requestOptions, "Não conformidade removida com sucesso!");
+    fetch(`${config.get('apiUrl')}/non_conformity_consequences/${nonConformityId}`, requestOptions);
+    doNonConformityFetch(`${config.get('apiUrl')}/non_conformity/${nonConformityId}`, requestOptions, "Não conformidade removida com sucesso!");
   }
 
   function updateNonConformity(){
@@ -192,11 +193,11 @@ export default function NonConformitiesPage() {
           }; 
     }
 
-    fetch("http://127.0.0.1:3000/non_conformity_consequences/" + currentNonConformityId, 
+    fetch(`${config.get('apiUrl')}/non_conformity_consequences/${currentNonConformityId}`,
     requestOption({ 
       consequences: consequenciasOperacionais.trim().split("\n")
     }));
-    doNonConformityFetch("http://127.0.0.1:3000/non_conformity/" + currentNonConformityId, 
+    doNonConformityFetch(`${config.get('apiUrl')}/non_conformity/${currentNonConformityId}`, 
     requestOption({ 
       non_conformity_name: nonConformityName,
       resource: selectedInsumo,
@@ -227,7 +228,7 @@ export default function NonConformitiesPage() {
       })
     }; 
 
-    doNonConformityFetch("http://127.0.0.1:3000/non_conformity", 
+    doNonConformityFetch(`${config.get('apiUrl')}/non_conformity`, 
     requestOptions, "Não conformidade cadastrada com sucesso!")
     .then(() => limpaCampos());
   };

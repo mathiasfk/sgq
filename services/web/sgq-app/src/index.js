@@ -28,6 +28,10 @@ import { history } from './_helpers';
 import { store } from './_helpers';
 import { PrivateRoute } from './_components';
 
+import config from 'react-global-configuration';
+
+config.set({'apiUrl': process.env.REACT_APP_API_URL || 'http://localhost:3000'});
+
 
 ReactDOM.render(
   <Provider store={store}>
