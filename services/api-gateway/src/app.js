@@ -23,6 +23,7 @@ const divulgationProxy = httpProxy('http://divulgation-module:3003');
 const incidentsProxy = httpProxy('http://incidents-module:3004');
 const nonConformitiesProxy = httpProxy('http://non-conformities-module:3005');
 const processesProxy = httpProxy('http://processes-module:3006');
+const rappitnqProxy = httpProxy('http://rappitnq:5672');
 
 
 // Authentication
@@ -48,6 +49,10 @@ app.all('/divulgation*', (req, res, next) => {
 // Incidents and Problems Module
 app.all('/*incident*', (req, res, next) => {
   incidentsProxy(req, res, next);
+});
+
+app.all('/rappitnq*', (req, res, next) => {
+  rappitnqProxy(req, res, next);
 });
 
 
