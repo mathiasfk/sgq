@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import config from 'react-global-configuration';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -82,8 +83,8 @@ export default function IncidentsPage() {
   async function fetchData(){
     showSnackBar("Loading...", "info");
     const urls = [
-      "http://127.0.0.1:3000/non_conformity",
-      "http://127.0.0.1:3000/incident",
+      `${config.get('apiUrl')}/non_conformity`,
+      `${config.get('apiUrl')}/incident`,
     ];
 
     Promise.all(urls.map(url =>
@@ -95,10 +96,12 @@ export default function IncidentsPage() {
     then(results => {
       hideSnackBar();
       let incidentes = [];
-      results[0].map(item => incidentes.push({id: item.id, name: item.non_conformity_name}))
-      setTiposIncidentes(incidentes);
+      if (results[0] && results[0].length > 0){
+        results[0].map(item => incidentes.push({id: item.id, name: item.non_conformity_name}));
+        setTiposIncidentes(incidentes);
+      }
 
-      if(results[1].length > 0){
+      if(results[1] && results[1].length > 0){
         setIncidents(results[1]);
       }
     });
@@ -110,7 +113,7 @@ export default function IncidentsPage() {
 
   const onChangeTipoIncidents = (value) => {
     showSnackBar("Loading...", "info");
-    fetch("http://127.0.0.1:3000/non_conformity_consequences/" + value)
+    fetch(`${config.get('apiUrl')}/non_conformity_consequences/${value}`)
         .then(checkResponseStatus)                 
         .then(parseJSON)
         .then(consequences => {
@@ -134,7 +137,7 @@ export default function IncidentsPage() {
       }
 
       //recarrega a lista de incidentes
-      fetch("http://127.0.0.1:3000/incident")
+      fetch(`${config.get('apiUrl')}/incident`)
         .then(checkResponseStatus)                 
         .then(parseJSON)
         .then(incidentes => setIncidents(incidentes))
@@ -182,9 +185,9 @@ export default function IncidentsPage() {
 
     var justificativa = prompt("Informe uma justificativa", "");
     if(justificativa != null && justificativa != ""){
-      fetch("http://127.0.0.1:3000/incident_conseq/" + incidentId, requestOptions)
+      fetch(`${config.get('apiUrl')}/incident_conseq/${incidentId}`, requestOptions)
         .then(() => console.log("Consequencias de incidentes removidas."));
-      doIncidentFetch("http://127.0.0.1:3000/incident/" + incidentId, requestOptions, "Incidente removido com sucesso!");
+        doIncidentFetch(`${config.get('apiUrl')}/incident/${incidentId}`, requestOptions, "Incidente removido com sucesso!");
     }
   }
 
@@ -205,7 +208,7 @@ export default function IncidentsPage() {
     }; 
 
     showSnackBar("Loading...", "info");
-    doIncidentFetch("http://127.0.0.1:3000/incident/" + currentIncidentId, 
+    doIncidentFetch(`${config.get('apiUrl')}/incident/${currentIncidentId}`, 
     requestOptions, 
     "Incidente atualizado com sucesso!")
     .then(() => {
@@ -232,7 +235,7 @@ export default function IncidentsPage() {
       })
     }; 
     showSnackBar("Loading...", "info");
-    doIncidentFetch("http://127.0.0.1:3000/incident", requestOptions, "Incidente cadastrado com sucesso!")
+    doIncidentFetch(`${config.get('apiUrl')}/incident`, requestOptions, "Incidente cadastrado com sucesso!")
     .then(() => limpaCampos());
   };
 

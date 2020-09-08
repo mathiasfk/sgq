@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import config from 'react-global-configuration';
 // @material-ui/core components
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import HistoryIcon from '@material-ui/icons/History';
@@ -66,7 +67,7 @@ function ChecklistWithHistoric(category){
 
   async function fetchChecklist(category){
     const urls = [
-      `http://127.0.0.1:3000/checklist_item?category=${category}`,
+      `${config.get('apiUrl')}/checklist_item?category=${category}`,
     ];
     
     Promise.all(urls.map(url =>
@@ -76,13 +77,15 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
+      if(results[0] && results[0].length > 0){
         setTiposChecklist(results[0].map(e => {return {id : e.id, name: e.name};}));
+      }
     });
   }
 
   async function fetchHistory(category){
     const urls = [
-      `http://127.0.0.1:3000/checklist_answer?category=${category}`,
+      `${config.get('apiUrl')}/checklist_answer?category=${category}`,
     ];
     showSnackBar("Loading...", "info");
     Promise.all(urls.map(url =>
@@ -93,13 +96,15 @@ function ChecklistWithHistoric(category){
     )).
     then(results => {
       hideSnackBar();
-      setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time, checked_items: <Details id={e.id} num={e.checked_items} />, total_items: e.total_items};}));
+      if(results[0] && results[0].length > 0){
+        setPreviousAnswers(results[0].map(e => {return {id : e.id, username: e.username, answer_time: e.answer_time, checked_items: <Details id={e.id} num={e.checked_items} />, total_items: e.total_items};}));
+      }
     });
   }
 
   async function fetchAnswer(id){
     const urls = [
-      `http://127.0.0.1:3000/checklist_answer/${id}`,
+      `${config.get('apiUrl')}/checklist_answer/${id}`,
     ];
     showSnackBar("Loading...", "info");
     Promise.all(urls.map(url =>
@@ -109,12 +114,14 @@ function ChecklistWithHistoric(category){
         .catch(error => console.log('Alguma api teve problemas!', error))
     )).
     then(results => {
-      setPopoverContent(results[0].map(e => (
-      <GridContainer>
-      <GridItem>{e.answer ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }</GridItem>
-      <GridItem>{e.name}</GridItem>
-      </GridContainer>
-      )));
+      if(results[0] && results[0].length > 0){
+        setPopoverContent(results[0].map(e => (
+        <GridContainer>
+        <GridItem>{e.answer ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }</GridItem>
+        <GridItem>{e.name}</GridItem>
+        </GridContainer>
+        )));
+      }
       hideSnackBar();
     });
   }
@@ -138,7 +145,7 @@ function ChecklistWithHistoric(category){
         })
     }; 
     showSnackBar("Loading...", "info");
-    fetch(`http://127.0.0.1:3000/checklist_answer?category=${category}&username=${User.getUsername()}`, requestOptions)
+    fetch(`${config.get('apiUrl')}/checklist_answer?category=${category}&username=${User.getUsername()}`, requestOptions)
     .then((response => {
       fetchHistory(category);
       setSelectedChecklist([]);

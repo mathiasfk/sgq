@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import config from 'react-global-configuration';
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -52,9 +53,9 @@ export default function BusinessIntelligence() {
 
   async function fetchData(){
     const urls = [
-      "http://127.0.0.1:3000/last_incident",
-      "http://127.0.0.1:3000/incidents_number",
-      "http://127.0.0.1:3000/incidents_per_month",
+      `${config.get('apiUrl')}/last_incident`,
+      `${config.get('apiUrl')}/incidents_number`,
+      `${config.get('apiUrl')}/incidents_per_month`,
     ];
 
     Promise.all(urls.map(url =>
