@@ -150,6 +150,17 @@ services:
       - ./services/processes-module/db/init_db.sql:/data/application/init_db.sql
     networks:
       - microservices
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 8080:15672
+      - 25676:25676
+    networks:
+      - microservices
+    
 
 networks:
     microservices:

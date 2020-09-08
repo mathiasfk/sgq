@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-
+var amqp = require('amqplib/callback_api');
 
 const db = require('./db');
 
@@ -18,34 +18,10 @@ app.get('/', function(req, res) {
 });
 
 // API REST
-
-// incident_type
-// GET
-app.get('/incident_type', function(req, res) {
-  db.execSQLQuery('SELECT * FROM incident_type;', res);
-});
-// GET
-app.get('/incident_type/:id', function(req, res) {
-  db.execSQLQuery('SELECT id, `name` FROM incident_type WHERE id =' + req.params.id, res);
-});
-// POST
-app.post('/incident_type', function(req, res) {
-  db.execSQLQuery('INSERT INTO incident_type (id, incident_name) VALUES (NULL, "' + req.query.name + '");', res);
-});
-// PUT
-app.put('/incident_type/:id', function(req, res) {
-  res.status(501).send('not implemented');
-});
-// DELETE
-app.delete('/incident_type/:id', function(req, res) {
-  db.execSQLQuery('DELETE FROM incident_type WHERE id =' + req.params.id, res);
-});
-
-
 // incident
 // GET
 app.get('/incident', function(req, res) {
-  db.execSQLQuery('SELECT * FROM incident;', res);
+  db.execSQLQuery('SELECT id, incident_type, DATE_FORMAT(incident_time, "%d/%m/%Y") as incident_time, `status`, comments  FROM incident;', res);
 });
 // GET 
 app.get('/incident/:id', function(req, res) {
@@ -67,6 +43,18 @@ app.post('/incident', function(req, res) {
   SET @incident_id = LAST_INSERT_ID();
   ${insertsItems}
   `, res);  
+
+  amqp.connect('amqp://tcc2:teste@rabbitmq:5672', function (err, conn) {
+    console.log(err);
+    conn.createChannel(function (err, ch) {
+        var q = 'hello';
+        var msg = 'Novo incidente criado!';
+        ch.assertQueue(q, { durable: false });     
+        ch.sendToQueue(q, new Buffer(msg));
+        console.log(" [x] Sent %s", msg);
+    });
+    setTimeout(function () { conn.close(); process.exit(0) }, 500);
+  });
 });
 // PUT
 app.put('/incident/:id', function(req, res) {
