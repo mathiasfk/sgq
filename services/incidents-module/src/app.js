@@ -44,7 +44,7 @@ app.post('/incident', function(req, res) {
   ${insertsItems}
   `, res);  
 
-  amqp.connect('amqp://tcc2:teste@rabbitmq:5672', function (err, conn) {
+  amqp.connect('amqp://guest:guest@rabbitmq:5672', function (err, conn) {
     console.log(err);
     conn.createChannel(function (err, ch) {
         var q = 'incidents';
