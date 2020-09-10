@@ -47,7 +47,7 @@ app.post('/incident', function(req, res) {
   amqp.connect('amqp://tcc2:teste@rabbitmq:5672', function (err, conn) {
     console.log(err);
     conn.createChannel(function (err, ch) {
-        var q = 'hello';
+        var q = 'incidents';
         var msg = 'Novo incidente criado!';
         ch.assertQueue(q, { durable: false });     
         ch.sendToQueue(q, new Buffer(msg));
