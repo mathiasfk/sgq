@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS processes_db;
 CREATE DATABASE IF NOT EXISTS processes_db;
 USE processes_db;
 

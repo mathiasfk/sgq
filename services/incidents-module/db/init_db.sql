@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS incidents_db;
 CREATE DATABASE IF NOT EXISTS incidents_db;
 USE incidents_db;
 

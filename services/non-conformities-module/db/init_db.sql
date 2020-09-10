@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS non_conformities_db;
 CREATE DATABASE IF NOT EXISTS non_conformities_db;
 USE non_conformities_db;
 
