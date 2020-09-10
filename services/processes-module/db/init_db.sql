@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS processes_db;
 CREATE DATABASE IF NOT EXISTS processes_db;
 USE processes_db;
 
@@ -45,7 +46,7 @@ REPLACE INTO checklist_item (category, name) values
 
 REPLACE INTO checklist_item (category, name) values 
 ("Pintura", "Inspeção visual"), 
-("Pintura", "Blabla"),
+("Pintura", "Acabamento"),
 ("Pintura", "Espectrometria");
 
 REPLACE INTO checklist_item (category, name) values 

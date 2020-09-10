@@ -1,6 +1,6 @@
 var amqp = require('amqplib/callback_api');
 
-amqp.connect('amqp://guest:guest@localhost:5672', function (err, conn) {
+amqp.connect('amqp://tcc2:teste@localhost:5672', function (err, conn) {
     conn.createChannel(function (err, ch) {
         var q = 'hello';
         var msg = 'Novo incidente criado!';
